@@ -6,6 +6,8 @@ import 'package:demo/services/stored_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../functions/handle_validation.dart';
+
 class UserController extends GetxController {
   final StorageService storage = Get.find();
   
@@ -137,7 +139,7 @@ class UserController extends GetxController {
     Get.snackbar('Validation Error', errorMessage);
   }
 
-  Future<void> createEmployee({
+  Future<bool> createEmployee({
     required String name,
     required String email,
     required String phone,
@@ -148,7 +150,7 @@ class UserController extends GetxController {
       final token = storage.getToken();
       if (token == null) {
         Get.snackbar('Error', 'Authentication token not found');
-        return;
+        return false;
       }
 
       final response = await http.post(
@@ -164,20 +166,26 @@ class UserController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        Get.snackbar('Success', 'Employee created successfully');
+        UsefulFunctions.showToast(
+          'Employee created successfully',
+          'success',
+        );
         await fetchUsers();
-        Get.toNamed(RouteClass.getUsersRoute());
+        return true;
       } else if (response.statusCode == 422) {
         _handleValidationErrors(response);
+        return false;
       } else {
         Get.snackbar(
           'Error',
           'Failed to create employee ${response.statusCode}',
         );
+        return false;
       }
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }
+    return false;
   }
 
 goToEdit(User user){

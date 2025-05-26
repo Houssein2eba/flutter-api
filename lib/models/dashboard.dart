@@ -1,8 +1,9 @@
-import 'package:demo/models/order.dart';
-import 'package:demo/models/product.dart';
+
 
 class Dashboard {
   final int? totalProducts;
+  final int? stocksCount;
+
   final int? clientCount;
   final int? lowStockCount;
   final int? totalSales;
@@ -26,14 +27,18 @@ class Dashboard {
     required this.todayRevenue,
     required this.paidAmount,
     required this.dueAmount,
+    required this.stocksCount,
+
   });
 
   factory Dashboard.fromJson(Map<String, dynamic> json) {
     return Dashboard(
       totalProducts: json['totalProducts'] ?? 0,
       lowStockCount: json['lowStockCount'] ?? 0,
+
       totalSales: json['totalSales'] ?? 0,
       clientCount: json['clientCount'] ?? 0,
+      stocksCount: json['stocksCount'] ?? 0,
       totalCategories: json['totalCategories'] ?? 0,
       totalRevenue: (json['todayRevenue'] ?? 0).toDouble(),
       totalProfit: (json['totalProfit'] ?? 0).toDouble(),

@@ -59,7 +59,7 @@ class EditUserController extends GetxController {
       }),
     );
     isLoading.value = false;
-    print("==statusCode==${response.statusCode}");
+
     if (response.statusCode == 200) {
       UsefulFunctions.showToast("User updated successfully", "success");
       Get.toNamed(RouteClass.getUsersRoute());

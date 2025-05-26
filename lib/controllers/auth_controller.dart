@@ -30,7 +30,7 @@ class Authcontroller extends GetxController {
     if (response.statusCode == 200) {
       // If the server returns an OK response, parse the JSON.
       var data = jsonDecode(response.body);
-      print("===============user=====${data['user']}");
+      
 
       User user = User.fromJson(data['user']);
       String token = data['token'];
@@ -41,11 +41,10 @@ class Authcontroller extends GetxController {
 
       final clientController = Get.put(Clientscontroller());
       await clientController.fetchClients();
-      Get.offAllNamed(RouteClass.getHomeRoute()); // Navigate to the home page
+      Get.offAllNamed(RouteClass.getDashBoardRoute()); // Navigate to the home page
     } else {
-      // If the server did not return a 200 OK response, throw an exception.
-      final errorData = jsonDecode(response.body);
-      print('=================================${errorData['message']}');
+    
+      
       showToast("invalid email or password", "error");
     }
     isLoading.value = false;
@@ -64,7 +63,7 @@ class Authcontroller extends GetxController {
       await storage.clearToken();
       Get.offAllNamed(RouteClass.getLoginRoute()); // Navigate to the login page
     } else {
-      print(response.statusCode);
+    
 
       // If the server did not return a 200 OK response, throw an exception.
       showToast("faild to logout", "error");

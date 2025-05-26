@@ -36,7 +36,7 @@ class RoleController extends GetxController {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final List rolesData = data['roles'];
-        print("=============================$rolesData");
+      
         roles.assignAll(rolesData);
         
       } else {

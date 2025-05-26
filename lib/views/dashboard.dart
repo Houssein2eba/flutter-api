@@ -1,23 +1,124 @@
+import 'package:demo/controllers/auth_controller.dart';
+import 'package:demo/routes/web.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:demo/services/stored_service.dart';
 import 'package:demo/controllers/dasboard/dashboard_controller.dart';
-import 'package:demo/models/dashboard.dart';
-import 'package:demo/wigets/drawer.dart';
+
 import 'package:shimmer/shimmer.dart';
 
 class DashboardScreen extends StatelessWidget {
   final DashboardController controller = Get.find();
   final StorageService storage = Get.find();
+  final Authcontroller authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MainDrawer(
-        userName: storage.getUser()!.name,
-        userEmail: storage.getUser()!.email,
+      drawer:  Drawer(
+      child: Column(
+        children: [
+          // User Accounts Drawer Header
+          UserAccountsDrawerHeader(
+            accountName: Text(
+              storage.getUser()?.name ?? 'Unknown',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            accountEmail: Text(storage.getUser()?.email ?? 'Unknown'),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: ClipOval(
+                // Replace with your image using:
+                // child: Image.network('your_image_url', fit: BoxFit.cover)
+                child: Icon(
+                  Icons.person,
+                  size: 40,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              
+            ),
+          ),
+
+          // Navigation Items
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.work),
+                  title: const Text('Employees'),
+                  onTap: () {
+                    // dashboardController.fetchDashboard();
+                    Get.toNamed(RouteClass.getUsersRoute());
+                    // Navigate to home
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.group),
+                  title: const Text('Clients'),
+                  onTap: () {
+                    Get.toNamed(RouteClass.getHomeRoute());
+                    // Navigate to profile
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.inventory),
+                  title: const Text('Stocks'),
+                  onTap: () {
+                    Get.toNamed( RouteClass.getStocksRoute());
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.help),
+                  title: const Text('Help & Feedback'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    // Navigate to help
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          // Logout Button at bottom
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.logout),
+                label: const Text(
+                  'Logout',
+                  style: TextStyle(fontSize: 16),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red[400],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () async{
+                  await authController.logout();
+                },
+              ),
+            ),
+          ),
+        ],
       ),
+    )
+  ,
       appBar: AppBar(
+        
         title: Text('Dashboard', 
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -27,11 +128,7 @@ class DashboardScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () => controller.fetchDashboard(),
-            tooltip: 'Refresh Data',
-          ),
+          _buildNotificationIcon()
         ],
       ),
       body: Obx(() {
@@ -63,8 +160,14 @@ class DashboardScreen extends StatelessWidget {
                     _StatItem(
                       icon: Icons.warning_amber_rounded,
                       color: Colors.orange,
-                      label: "Low Stock",
+                      label: "Low Products",
                       value: controller.dashboard.value!.lowStockCount.toString(),
+                    ),
+                    _StatItem(
+                      icon: Icons.inventory_sharp,
+                      color: Colors.red,
+                      label: "Stocks",
+                      value: controller.dashboard.value!.stocksCount.toString()
                     ),
                     _StatItem(
                       icon: Icons.category_rounded,
@@ -104,14 +207,14 @@ class DashboardScreen extends StatelessWidget {
                       icon: Icons.money_rounded,
                       color: Colors.red,
                       label: "Today's Revenue",
-                      value: "${controller.dashboard.value!.todayRevenue?.toStringAsFixed(2) ?? '0.00'} MRU",
+                      value: "${controller.dashboard.value!.totalRevenue?.toStringAsFixed(2) ?? '0.00'} MRU",
                       isCurrency: true,
                     ),
                     _StatItem(
                       icon: Icons.attach_money_rounded,
                       color: Colors.teal,
                       label: "Total Revenue",
-                      value: "${controller.dashboard.value!.totalRevenue?.toStringAsFixed(2) ?? '0.00'} MRU",
+                      value: "${controller.dashboard.value!.todayRevenue?.toStringAsFixed(2) ?? '0.00'} MRU",
                       isCurrency: true,
                     ),
                     _StatItem(
@@ -191,6 +294,17 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 }
+
+Widget _buildNotificationIcon() {
+    return IconButton(
+      icon: Icon(Icons.notifications),
+      onPressed: () {
+        // Handle notification icon tap
+        Get.toNamed('/notifications');
+      },
+    );
+  }
+
 
 class _DashboardCard extends StatelessWidget {
   final String title;
@@ -285,5 +399,8 @@ class _StatItem extends StatelessWidget {
         ],
       ),
     );
+
+    
   }
+
 }

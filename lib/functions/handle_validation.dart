@@ -21,6 +21,15 @@ class UsefulFunctions {
     
   }
 
+  static String  formatDate(String date) {
+    try {
+      final parsedDate = DateTime.parse(date);
+      return '${parsedDate.day}/${parsedDate.month}/${parsedDate.year} ${parsedDate.hour}:${parsedDate.minute}';
+    } catch (e) {
+      return 'Invalid date';
+    }
+  }
+
   static showToast(String message, String type) {
     Get.snackbar(
       type,

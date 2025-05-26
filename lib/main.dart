@@ -1,5 +1,6 @@
 import 'package:demo/controllers/auth_controller.dart';
 import 'package:demo/controllers/client_controller.dart';
+import 'package:demo/services/ask_permissions.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/routes/web.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize and register the StorageService
+  await Get.putAsync(() => AskPermissions().askStoragePermission());
   await Get.putAsync(() => StorageService().init());
   
 
@@ -108,7 +110,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      initialRoute: RouteClass.getHomeRoute(),
+      initialRoute: RouteClass.getDashBoardRoute(),
       getPages: RouteClass.getPages(),
     );
   }

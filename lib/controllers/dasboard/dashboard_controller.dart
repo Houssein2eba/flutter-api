@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:demo/functions/handle_validation.dart';
+import 'package:demo/services/ask_permissions.dart';
 import 'package:demo/services/stored_service.dart';
 import 'package:get/get.dart';
 import 'package:demo/models/dashboard.dart';
@@ -9,6 +10,7 @@ import 'package:http/http.dart' as http;
 class DashboardController extends GetxController {
   final Rx<Dashboard?> dashboard = Rx<Dashboard?>(null);
   final RxBool isLoading = false.obs;
+  final AskPermissions _permissions = AskPermissions();
   
   final StorageService storage = Get.find();
 
@@ -16,6 +18,7 @@ class DashboardController extends GetxController {
   void onInit()async {
     super.onInit();
     await fetchDashboard();
+    await checkStoragePermission();
   }
 
   Future<void> fetchDashboard() async {
@@ -31,7 +34,7 @@ class DashboardController extends GetxController {
           'Content-Type': 'application/json',
         },
       );
-      print("==============================${response.body}");
+      
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         
@@ -39,8 +42,7 @@ class DashboardController extends GetxController {
         final statsData = data ;
         
         dashboard.value = Dashboard.fromJson(statsData);
-        print("======================Dashboard========${dashboard.value}");
-        print("==total products==${dashboard.value!.totalProducts}");
+
       } else {
         throw Exception('Failed with status: ${response.statusCode}');
       }
@@ -55,4 +57,18 @@ class DashboardController extends GetxController {
       isLoading(false);
     }
   }
+
+
+
+  Future<void> checkStoragePermission() async {
+    bool granted = await _permissions.askStoragePermission();
+    if (granted) {
+      // Do something, e.g., read/write files
+      print("Storage permission granted");
+    } else {
+      // Show error or request again
+      Get.snackbar('Permission', 'Storage permission is required.');
+    }
+  }
+
 }

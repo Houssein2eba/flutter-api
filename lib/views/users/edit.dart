@@ -161,9 +161,8 @@ final  UserController roleController = Get.put(UserController());
                       SpecialButton(
                         text: 'Confirm',
                         onPress: ()async {
-                          print("=================userControllerRoles==${roleController.roles}");
+                        
                           if (controller.formKey.currentState!.validate()) {
-                            print("=================userControllerRoles==${controller.formKey.currentState!.validate()}");
                           await  controller.updateUser(id: controller.user!.id!);
                           }
                         },

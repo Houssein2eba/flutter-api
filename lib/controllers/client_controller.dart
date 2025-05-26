@@ -24,7 +24,7 @@ class Clientscontroller extends GetxController {
     try {
       final token = storage.getToken();
       if (token == null) {
-        print('token is null client controller');
+        showToast("Authentication token not found", "error");
         return;
       }
       isLoading.value = true;
@@ -36,7 +36,7 @@ class Clientscontroller extends GetxController {
           'Accept': 'application/json',
         },
       );
-      print("====response====${response.statusCode}");
+      
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         clients.value = data.map((client) => Client.fromJson(client)).toList();
@@ -158,9 +158,9 @@ class Clientscontroller extends GetxController {
         showToast("Authentication token not found", "error");
         return;
       }
-      print(name);
+      
       final requestbody = jsonEncode({"id": id, "name": name, "number": phone});
-      print(requestbody);
+    
 
       final response = await http.put(
         Uri.parse('http://192.168.100.13:8000/api/clients/$id'),
@@ -173,14 +173,14 @@ class Clientscontroller extends GetxController {
       );
       if (response.statusCode == 200) {
         showToast("Client updated successfully","success");
-        final data = jsonDecode(response.body);
-        final client = data['client'];
+  
+        
         fetchClients();
         
         Get.toNamed('/');
       }else{
         final errorData = jsonDecode(response.body);
-        print(errorData);
+      
         showToast("Failed to update client: ${errorData['error']}", "error");
       }
     } catch (e) {
@@ -211,7 +211,7 @@ class Clientscontroller extends GetxController {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        print('Raw API Response: ${response.body}'); // Debug raw response
+        
 
         List<Order> fetchedOrders = [];
 
@@ -248,7 +248,7 @@ class Clientscontroller extends GetxController {
 
         if (fetchedOrders.isNotEmpty) {
           orders.assignAll(fetchedOrders);
-          print('Successfully loaded ${fetchedOrders.length} orders');
+          
         } else {
           Get.snackbar('Info', 'No orders found');
         }
@@ -256,13 +256,13 @@ class Clientscontroller extends GetxController {
         throw HttpException('Failed to load orders');
       }
     } on FormatException catch (e) {
-      print('Format Error: $e');
+    ;
       showToast(e.message, "error");
     } on HttpException catch (e) {
-      print('HTTP Error: $e');
+  
       showToast(e.message, "error");
     } catch (e, stackTrace) {
-      print('Unexpected Error: $e\n$stackTrace');
+      
       showToast("Something went wrong: $e", "error");
     }
 

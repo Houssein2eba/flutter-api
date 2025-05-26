@@ -1,18 +1,16 @@
 import 'package:demo/services/stored_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:demo/controllers/auth_controller.dart';
+
 import 'package:demo/controllers/client_controller.dart';
-import 'package:demo/controllers/notification_controller.dart';
-import 'package:demo/wigets/drawer.dart';
+
+
 import 'package:demo/routes/web.dart';
 
 class HomePage extends StatelessWidget {
   final Clientscontroller clientController = Get.find();
 
-  final NotificationController notificationController = Get.put(
-    NotificationController(),
-  );
+
   final storage = Get.find<StorageService>();
   HomePage({super.key});
 
@@ -20,14 +18,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: MainDrawer(
-          userName: storage.getUser()!.name,
-          userEmail: storage.getUser()!.email,
-        ),
         appBar: AppBar(
+          centerTitle: true,
           title: const Text("Client Management"),
           backgroundColor: Colors.blue,
-          actions: [_buildNotificationIcon()],
+        
         ),
       
         body: SafeArea(child: _buildBody()),
@@ -40,40 +35,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildNotificationIcon() {
-    return Obx(() {
-      final count = notificationController.unreadCount.value;
-      return IconButton(
-        icon: Stack(
-          children: [
-            const Icon(Icons.notifications),
-            if (count > 0)
-              Positioned(
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 16,
-                    minHeight: 16,
-                  ),
-                  child: Text(
-                    count.toString(),
-                    style: const TextStyle(color: Colors.white, fontSize: 10),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-          ],
-        ),
-        onPressed: () => Get.toNamed(RouteClass.getNotificationsRoute()),
-        tooltip: 'Notifications',
-      );
-    });
-  }
 
 
   Widget _buildBody() {
@@ -149,7 +110,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
                 onTap: ()async {
-                  print(client.id);
+                
                   await clientController.getOrders(id: client.id);
                   Get.toNamed(RouteClass.getShowClientRoute());
                 },
