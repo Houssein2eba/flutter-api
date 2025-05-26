@@ -1,79 +1,134 @@
+import 'package:demo/controllers/order/single_order_controller.dart';
 import 'package:demo/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:demo/controllers/client_controller.dart';
 
 class ClientDetailsPage extends StatelessWidget {
-  final Clientscontroller controller = Get.find();
-  // Sample static data - in a real app this would come from API/controller
-  
+  final SingleOrderController controller = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Client Details'),
+          title: const Text('Client Details'),
+          centerTitle: true,
         ),
-        body:controller.orders.isEmpty?Center(child: Text('No orders found'),): Obx (()=>SingleChildScrollView(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Client Information Section
-              Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        controller.orders.first.client.name,
+        body: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // Safe access to client data (might be empty)
+          final client = controller.orderDetails.isNotEmpty 
+              ? controller.orderDetails.first.client 
+              : null;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Client Information Section
+                if (client != null)
+                  Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            client.name ,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          
+                            _buildInfoRow(Icons.phone, client.phone),
                         
+                            
+                        ],
                       ),
-                      SizedBox(height: 8),
-                      _buildInfoRow(Icons.phone, controller.orders.first.client.phone),
-                    
-                      
-                    ],
+                    ),
+                  ),
+
+                const SizedBox(height: 24),
+
+                // Orders Section Header
+                const Text(
+                  'Order History',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              
-              SizedBox(height: 24),
-              
-              // Orders Section Header
-              Text(
-                'Order History',
-                
-              ),
-              SizedBox(height: 8),
-              
-              // Orders List
-              ListView.separated(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                
-                itemCount: controller.orders.length,
-                separatorBuilder: (context, index) => SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final order = controller.orders[index];
-                  return _buildOrderCard(order, context);
-                },
-              ),
-            ],
+                const SizedBox(height: 8),
+
+                // Orders List or Empty State
+                if (controller.orderDetails.isEmpty)
+                  _buildNoOrdersFound()
+                else
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: controller.orderDetails.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final order = controller.orderDetails[index];
+                      return _buildOrderCard(order, context);
+                    },
+                  ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildNoOrdersFound() {
+    return Container(
+      margin: const EdgeInsets.only(top: 32),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Icon(
+            Icons.receipt_long,
+            size: 64,
+            color: Colors.grey[400],
           ),
-        )),
+          const SizedBox(height: 16),
+          Text(
+            'No Orders Found',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'This client has no order history yet',
+            style: TextStyle(
+              color: Colors.grey[500],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildInfoRow(IconData icon, String text) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
           Icon(icon, size: 20, color: Colors.grey),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text(text),
         ],
       ),
@@ -82,8 +137,9 @@ class ClientDetailsPage extends StatelessWidget {
 
   Widget _buildOrderCard(Order order, BuildContext context) {
     return Card(
+      elevation: 2,
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -92,66 +148,65 @@ class ClientDetailsPage extends StatelessWidget {
               children: [
                 Text(
                   'Order #${order.reference}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Chip(
                   label: Text(
                     order.status,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                   backgroundColor: _getStatusColor(order.status),
                 ),
-                SizedBox(width: 8),
-          IconButton(
-            icon: Icon(Icons.picture_as_pdf_rounded, color: Colors.red),
-            onPressed: () async{
-              await controller.exportPdf(id: order.id);
-            },
-            tooltip: 'Export as PDF',
-          ),
+                IconButton(
+                  icon: const Icon(Icons.picture_as_pdf, color: Colors.red),
+                  onPressed: () async {
+                    await controller.exportPdf(id: order.id);
+                  },
+                ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Date: ${order.createdAt}',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Colors.grey[600]),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             
             // Products List
-            ...order.products.map<Widget>((product) => Padding(
-              padding: EdgeInsets.symmetric(vertical: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('${product.pivot.quantity} x ${product.name}'),
-                  Text('\$${product.price.toStringAsFixed(2)}'),
-                ],
-              ),
-            )).toList(),
+            if (order.products.isNotEmpty)
+              ...order.products.map((product) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${product.pivot?.quantity ?? 0} x ${product.name}'),
+                    Text('\$${product.price.toStringAsFixed(2)}'),
+                  ],
+                ),
+              )),
             
-            Divider(height: 24),
+            const Divider(height: 24),
             
-            // Order Total
+            // Order Total and Actions
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                order.status == 'paid' ? Icon(Icons.check_circle, color: Colors.green) : 
-                ElevatedButton(
-                  onPressed: () async {
-                    await controller.markAsPaid(id: order.id);
-                    
-                  },
-                  child: Text('Mark as Paid'),
-                ),
+                order.status == 'paid' 
+                    ? const Icon(Icons.check_circle, color: Colors.green)
+                    : ElevatedButton(
+                        onPressed: () async {
+                          await controller.markAsPaid(id: order.id);
+                        },
+                        child: const Text('Mark as Paid'),
+                      ),
                 
-                Text(
+                const Text(
                   'Total',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
                   '\$${order.totalAmount.toStringAsFixed(2)}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
@@ -166,14 +221,17 @@ class ClientDetailsPage extends StatelessWidget {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
+      case 'paid':
       case 'delivered':
         return Colors.green;
       case 'processing':
         return Colors.orange;
       case 'cancelled':
         return Colors.red;
-      default:
+      case 'pending':
         return Colors.blue;
+      default:
+        return Colors.grey;
     }
   }
 }

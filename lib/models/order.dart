@@ -1,15 +1,15 @@
 // order_model.dart
 import 'product.dart';
-import 'package:get/get.dart';
+
 import 'client.dart';
-import 'dart:convert';
+
 
 class Order {
   final String id;
   final String reference;
   final String status;
   final double totalAmount;
-  final dynamic payment; // Could be null or another model
+ 
   final List<Product> products;
   final Client client;
   final int items;
@@ -21,7 +21,7 @@ class Order {
     required this.reference,
     required this.status,
     required this.totalAmount,
-    this.payment,
+    
     required this.products,
     required this.client,
     required this.items,
@@ -35,7 +35,7 @@ class Order {
       reference: json['reference'],
       status: json['status'],
       totalAmount: (json['total_amount'] as num).toDouble(),
-      payment: json['payment'],
+      
       client: Client.fromJson(json['client']),
       products:
           (json['products'] as List)
@@ -53,7 +53,7 @@ class Order {
       'reference': reference,
       'status': status,
       'total_amount': totalAmount,
-      'payment': payment,
+      
       'products': products.map((product) => product.toJson()).toList(),
       'items': items,
       'created_at': createdAt,
@@ -66,7 +66,7 @@ class Order {
       reference: reference ?? this.reference,
       status: status ?? this.status,
       totalAmount: totalAmount ?? this.totalAmount,
-      payment: payment ?? this.payment,
+    
       products: products ?? this.products,
       client: client ?? this.client,
       items: items ?? this.items,

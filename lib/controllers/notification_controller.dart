@@ -1,6 +1,7 @@
 import 'package:demo/models/noification.dart';
 import 'package:demo/services/stored_service.dart';
 import 'package:demo/wigets/tost.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -129,12 +130,18 @@ class NotificationController extends GetxController {
 
 Future <void> deleteNotification(String notificationId) async {
   try {
-    isLoading.value = true;
+    
     final String? token =storage.getToken();
 
     if (token == null) {
       throw Exception('User not authenticated');
     }
+    Get.dialog(
+      const Center(
+        child: CircularProgressIndicator(),
+      ),
+      barrierDismissible: false,
+    );
 
     final response = await http.delete(
       Uri.parse('$_baseUrl/notifications/$notificationId'),
@@ -143,19 +150,21 @@ Future <void> deleteNotification(String notificationId) async {
         'Accept': 'application/json',
       },
     );
+    Get.back(); // Close the loading dialog
 
     if (response.statusCode == 200) {
       // Update the local notification state
       notifications.removeWhere((n) => n.id == notificationId);
       unreadCount.value = unreadCount.value - 1;
     } else {
-      throw Exception('Failed to delete notification');
+      showToast("Failed to delete notification: ${response.statusCode}", "error");
     }
   } catch (e) {
+  Get.back(); // Close the loading dialog if it was still open
     showToast("Something went wrong: $e", "error");
   }
 
-  isLoading.value = false;
+  
 }
 
 }

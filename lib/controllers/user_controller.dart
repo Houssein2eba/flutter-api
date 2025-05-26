@@ -171,6 +171,7 @@ class UserController extends GetxController {
           'success',
         );
         await fetchUsers();
+        
         return true;
       } else if (response.statusCode == 422) {
         _handleValidationErrors(response);

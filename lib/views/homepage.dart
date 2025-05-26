@@ -109,10 +109,10 @@ class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                onTap: ()async {
-                
-                  await clientController.getOrders(id: client.id);
-                  Get.toNamed(RouteClass.getShowClientRoute());
+                onTap: () {
+                   
+                  
+                  Get.toNamed(RouteClass.getShowClientRoute(),arguments: {'id':client.id.toString()});
                 },
               ),
             );

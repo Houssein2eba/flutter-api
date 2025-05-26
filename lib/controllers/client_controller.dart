@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:demo/models/Client.dart';
 import 'package:demo/services/stored_service.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:demo/models/order.dart';
@@ -36,7 +37,7 @@ class Clientscontroller extends GetxController {
           'Accept': 'application/json',
         },
       );
-      
+
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         clients.value = data.map((client) => Client.fromJson(client)).toList();
@@ -51,7 +52,14 @@ class Clientscontroller extends GetxController {
   }
 
   Future<void> deleteClient({required String id}) async {
-    isLoading.value = true;
+    
+
+    Get.dialog(
+      const Center(
+        child: CircularProgressIndicator(),
+      ),
+      barrierDismissible: false,
+    );
     final response = await http.delete(
       Uri.parse('http://192.168.100.13:8000/api/clients/$id'),
       headers: {
@@ -60,13 +68,14 @@ class Clientscontroller extends GetxController {
         'Accept': 'application/json',
       },
     );
+    Get.back(); 
     if (response.statusCode == 200) {
       clients.removeWhere((client) => client.id == id);
-      showToast("Client deleted successfully","success");
+      showToast("Client deleted successfully", "success");
     } else {
       showToast("deletion faild ${response.statusCode} ", "error");
     }
-    isLoading.value = false;
+    
   }
 
   Future<void> createClient({
@@ -93,7 +102,7 @@ class Clientscontroller extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        showToast("Client created successfully","success");
+        showToast("Client created successfully", "success");
         final data = jsonDecode(response.body);
         final client = data['client'];
         // Navigate to the home page
@@ -126,7 +135,7 @@ class Clientscontroller extends GetxController {
           'Content-Type': 'application/json',
         },
       );
-       isLoading.value = false;
+      isLoading.value = false;
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final client = data['client'];
@@ -135,12 +144,10 @@ class Clientscontroller extends GetxController {
         showToast("Failed to get client: ${response.statusCode}", "error");
         return null;
       }
-      
     } catch (e) {
       showToast("Something went wrong: $e", "error");
       return null;
     }
-    
   }
 
   Future updateClient({
@@ -148,19 +155,15 @@ class Clientscontroller extends GetxController {
     required String name,
     required String phone,
   }) async {
-
-
     try {
-      
       isLoading.value = true;
       final token = storage.getToken();
       if (token == null) {
         showToast("Authentication token not found", "error");
         return;
       }
-      
+
       final requestbody = jsonEncode({"id": id, "name": name, "number": phone});
-    
 
       final response = await http.put(
         Uri.parse('http://192.168.100.13:8000/api/clients/$id'),
@@ -172,15 +175,14 @@ class Clientscontroller extends GetxController {
         body: requestbody,
       );
       if (response.statusCode == 200) {
-        showToast("Client updated successfully","success");
-  
-        
+        showToast("Client updated successfully", "success");
+
         fetchClients();
-        
+
         Get.toNamed('/');
-      }else{
+      } else {
         final errorData = jsonDecode(response.body);
-      
+
         showToast("Failed to update client: ${errorData['error']}", "error");
       }
     } catch (e) {
@@ -211,7 +213,6 @@ class Clientscontroller extends GetxController {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        
 
         List<Order> fetchedOrders = [];
 
@@ -248,7 +249,6 @@ class Clientscontroller extends GetxController {
 
         if (fetchedOrders.isNotEmpty) {
           orders.assignAll(fetchedOrders);
-          
         } else {
           Get.snackbar('Info', 'No orders found');
         }
@@ -256,13 +256,11 @@ class Clientscontroller extends GetxController {
         throw HttpException('Failed to load orders');
       }
     } on FormatException catch (e) {
-    ;
+      ;
       showToast(e.message, "error");
     } on HttpException catch (e) {
-  
       showToast(e.message, "error");
     } catch (e, stackTrace) {
-      
       showToast("Something went wrong: $e", "error");
     }
 
@@ -286,7 +284,7 @@ class Clientscontroller extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      showToast("Order marked as paid successfully","success");
+      showToast("Order marked as paid successfully", "success");
       final index = orders.indexWhere((order) => order.id == id);
 
       if (index != -1) {
@@ -320,7 +318,7 @@ class Clientscontroller extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      showToast("PDF exported successfully","success");
+      showToast("PDF exported successfully", "success");
     } else {
       showToast("Failed to export PDF", "error");
     }

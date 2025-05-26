@@ -8,7 +8,7 @@ class Product {
   final double price;
   final int quantity;
   final int minQuantity;
-  final String image;
+  final String? image;
   final Pivot pivot;
   final String createdAt;
   final double cost;
@@ -36,7 +36,7 @@ class Product {
       price: (json['price'] as num).toDouble(),
       quantity: json['quantity']?.toInt() ?? 0,
       minQuantity: json['min_quantity']?.toInt() ?? 0,
-      image: json['image'],
+      image: json['image'] ?? '',
       pivot: Pivot.fromJson(json['pivot']),
       createdAt: json['created_at'],
       cost: (json['cost'] as num).toDouble(),

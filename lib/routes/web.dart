@@ -59,7 +59,7 @@ class RouteClass{
     final client = Get.arguments as Map<String, dynamic>;
     return EditClientPage(client: client);
   },middlewares: [SanctumAuthMiddleware()] ),
-      GetPage(name: showClient, page: ()=> ClientDetailsPage(),middlewares: [SanctumAuthMiddleware()] ),
+      GetPage(name: showClient, page: ()=> ClientDetailsPage(),middlewares: [SanctumAuthMiddleware()],binding: UserBinding() ),
       GetPage(name: users, page: ()=> UserPage(),middlewares: [SanctumAuthMiddleware()],binding: UserBinding() ),
      GetPage(name: users, page: () => HomePage(),middlewares: [SanctumAuthMiddleware()],binding: UserBinding() ),
      GetPage(name: createUser, page: () => CreateUser(),middlewares: [SanctumAuthMiddleware()],bindings: [UserBinding()] ),
