@@ -7,14 +7,10 @@ import 'package:demo/controllers/user_controller.dart';
 
 class CreateUser extends StatelessWidget {
   CreateUser({super.key});
+
+  final UserController controller = Get.find();
   
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final UserController userController = Get.find();
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +76,12 @@ class CreateUser extends StatelessWidget {
                       // Form
                       Expanded(
                         child: Form(
-                          key: _formKey,
+                          key:controller.formkey,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               CustomFormField(
-                                controller: nameController,
+                                controller: controller.nameController,
                                 icon: Icons.person,
                                 keyboardType: TextInputType.name,
                                 label: "Full name", 
@@ -99,7 +95,7 @@ class CreateUser extends StatelessWidget {
                               ),
                               const SizedBox(height: 12),
                               CustomFormField(
-                                controller: emailController, 
+                                controller: controller.emailController, 
                                 keyboardType: TextInputType.emailAddress, 
                                 label: "Email", 
                                 icon: Icons.email, 
@@ -115,12 +111,11 @@ class CreateUser extends StatelessWidget {
                                 child: Text("Email"),
                               ),
                               const SizedBox(height: 12),
-                              CustomFormField(
-                                controller: passwordController,
+                              TextFormField(
+                                controller:controller.passwordController,
                                 keyboardType: TextInputType.visiblePassword,
-                                label: "Password",
-                                icon: Icons.lock,
-                                obscureText: true,
+                                
+                                obscureText: controller.isPasswordVisible.value,
                                 validator: (value){
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter your password';
@@ -130,29 +125,53 @@ class CreateUser extends StatelessWidget {
                                   }
                                   return null;
                                 },
-                                child: Text("Password"),
+                                decoration: InputDecoration(
+                                  labelText: "Password",
+                                  icon: Icon(Icons.lock),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      controller.isPasswordVisible.value 
+                                          ? Icons.visibility 
+                                          : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      controller.isPasswordVisible.value = !controller.isPasswordVisible.value;
+                                    },
+                                  ),
+                                ),
                               ),
                               const SizedBox(height: 12),
-                              CustomFormField(
-                                controller: confirmPasswordController,
+                              TextFormField(
+                                controller: controller.confirmPasswordController,
                                 keyboardType: TextInputType.visiblePassword,
-                                label: "Confirm Password",
-                                icon: Icons.lock,
-                                obscureText: true,
+                                obscureText: controller.isConfirmPasswordVisible.value,
                                 validator: (value){
                                   if (value == null || value.isEmpty) {
                                     return 'Please confirm your password';
                                   }
-                                  if (value != passwordController.text) {
+                                  if (value != controller.passwordController.text) {
                                     return 'Passwords do not match';
                                   }
                                   return null;
                                 },
-                                child: Text("Confirm Password"),
+                                decoration: InputDecoration(
+                                  labelText: "Confirm Password",
+                                  icon: Icon(Icons.lock),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      controller.isConfirmPasswordVisible.value 
+                                          ? Icons.visibility 
+                                          : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      controller.isConfirmPasswordVisible.value = !controller.isConfirmPasswordVisible.value;
+                                    },
+                                  ),
+                                ),
                               ),
                               const SizedBox(height: 12),
                               CustomFormField(
-                                controller: phoneController,
+                                controller: controller.phoneController,
                                 keyboardType: TextInputType.phone,
                                 label: "Phone",
                                 icon: Icons.phone,
@@ -169,9 +188,7 @@ class CreateUser extends StatelessWidget {
                               ),
                               const SizedBox(height: 12),
                               Obx(() {
-                                if (userController.isLoading.value) {
-                                  return const Center(child: CircularProgressIndicator());
-                                }
+                                
                                 
                                 return InputDecorator(
                                   decoration: InputDecoration(
@@ -179,12 +196,12 @@ class CreateUser extends StatelessWidget {
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButtonFormField<String>(
-                                      value: userController.selectedRoleId.value.isEmpty 
+                                      value: controller.selectedRoleId.value.isEmpty 
                                           ? null 
-                                          : userController.selectedRoleId.value,
+                                          : controller.selectedRoleId.value,
                                       isExpanded: true,
                                       hint: const Text('Select Role'),
-                                      items: userController.roles.map((role) {
+                                      items: controller.roles.map((role) {
                                         return DropdownMenuItem<String>(
                                           value: role!.id.toString(),
                                           child: Text(role.name!),
@@ -193,7 +210,7 @@ class CreateUser extends StatelessWidget {
                                       validator: (value) => value == null ? 'Please select a role' : null,
                                       onChanged: (String? value) {
                                         if (value != null) {
-                                          userController.selectedRoleId.value = value;
+                                          controller.selectedRoleId.value = value;
                                         }
                                       },
                                     ),
@@ -204,18 +221,14 @@ class CreateUser extends StatelessWidget {
                               SpecialButton(
                                 text: 'Create Employee',
                                 onPress: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    if (userController.selectedRoleId.value.isEmpty) {
+                                  if (controller.formkey.currentState!.validate()) {
+                                    if (controller.selectedRoleId.value.isEmpty) {
                                       Get.snackbar('Error', 'Please select a role');
                                       return;
                                     }
                                     
-                                    final success = await userController.createEmployee(
-                                      name: nameController.text,
-                                      email: emailController.text,
-                                      phone: phoneController.text,
-                                      password: passwordController.text,
-                                      roleId: userController.selectedRoleId.value,
+                                    final success = await controller.createEmployee(
+
                                     );
                                     
                                     if (success) {

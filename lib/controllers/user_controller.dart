@@ -3,6 +3,7 @@ import 'package:demo/models/role.dart';
 import 'package:demo/models/user.dart';
 import 'package:demo/routes/web.dart';
 import 'package:demo/services/stored_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,10 +16,25 @@ class UserController extends GetxController {
   final RxList<Role?> roles = <Role?>[].obs;
   final RxBool isLoading = false.obs;
   var selectedRoleId = ''.obs;
+   late  final TextEditingController nameController ;
+ late  final TextEditingController emailController;
+  late TextEditingController phoneController ;
+late  final TextEditingController passwordController ;
+late  final TextEditingController confirmPasswordController ;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  
+  get formkey=> _formKey;
+  RxBool isPasswordVisible = false.obs;
+  RxBool isConfirmPasswordVisible = false.obs;
 
   @override
   void onInit() async {
     super.onInit();
+    nameController = TextEditingController();
+    emailController = TextEditingController();
+    phoneController = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
     await fetchInitialData();
   }
 
@@ -139,31 +155,30 @@ class UserController extends GetxController {
     Get.snackbar('Validation Error', errorMessage);
   }
 
-  Future<bool> createEmployee({
-    required String name,
-    required String email,
-    required String phone,
-    required String password,
-    required String roleId,
-  }) async {
+  Future<bool> createEmployee() async {
     try {
       final token = storage.getToken();
       if (token == null) {
         Get.snackbar('Error', 'Authentication token not found');
         return false;
       }
+      Get.dialog(
+        const CircularProgressIndicator(),
+        barrierDismissible: false,
+      );
 
       final response = await http.post(
         Uri.parse('http://192.168.100.13:8000/api/users'),
         headers: _buildHeaders(token),
         body: jsonEncode({
-          'name': name,
-          'email': email,
-          'number': phone,
-          'password': password,
-          'role_id': roleId,
+          'name': nameController.text,
+          'email': emailController.text,
+          'number': phoneController.text,
+          'password': passwordController.text,
+          'role_id': selectedRoleId.value,
         }),
       );
+      Get.back(); // Close the loading dialog
 
       if (response.statusCode == 200) {
         UsefulFunctions.showToast(
@@ -171,7 +186,7 @@ class UserController extends GetxController {
           'success',
         );
         await fetchUsers();
-        
+
         return true;
       } else if (response.statusCode == 422) {
         _handleValidationErrors(response);
@@ -184,6 +199,7 @@ class UserController extends GetxController {
         return false;
       }
     } catch (e) {
+      Get.back(); // Close the loading dialog
       Get.snackbar('Error', e.toString());
     }
     return false;
