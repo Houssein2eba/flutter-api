@@ -3,6 +3,8 @@ import 'package:demo/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+
+
 class ClientDetailsPage extends StatelessWidget {
   final SingleOrderController controller = Get.find();
 
@@ -25,6 +27,7 @@ class ClientDetailsPage extends StatelessWidget {
               : null;
 
           return SingleChildScrollView(
+            controller: controller.scrollController,
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,6 +84,9 @@ class ClientDetailsPage extends StatelessWidget {
                       return _buildOrderCard(order, context);
                     },
                   ),
+                  controller.isLoadingMore.value
+                    ? const Center(child: CircularProgressIndicator())
+                    : const SizedBox.shrink(),
               ],
             ),
           );
@@ -146,26 +152,36 @@ class ClientDetailsPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Order #${order.reference}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Chip(
-                  label: Text(
-                    order.status,
-                    style: const TextStyle(color: Colors.white),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    'Order #${order.reference}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  backgroundColor: _getStatusColor(order.status),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.picture_as_pdf, color: Colors.red),
-                  onPressed: () async {
-                    await controller.exportPdf(id: order.id);
-                  },
+                Expanded(
+                  flex:2,
+                  child: Text(
+                    order.status.toUpperCase(),
+                    style: TextStyle(
+                      color: _getStatusColor(order.status),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                    icon: const Icon(Icons.picture_as_pdf, color: Colors.red),
+                    onPressed: () async {
+                      await controller.exportPdf(id: order.id);
+                    },
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
+            const Divider(height: 24),
+
             Text(
               'Date: ${order.createdAt}',
               style: TextStyle(color: Colors.grey[600]),

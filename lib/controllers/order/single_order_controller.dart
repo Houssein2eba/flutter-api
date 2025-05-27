@@ -18,33 +18,76 @@ class SingleOrderController extends GetxController{
   final RxBool isLoading= false.obs;
   final StorageService storage = Get.find();
   final RxList<Order> orderDetails = <Order>[].obs;
+ late  final ScrollController scrollController ;
+ final RxBool isLoadingMore = false.obs;
+ final RxBool hasMore = true.obs;
+ final RxString nextCursor = ''.obs;
+  
   late final id;
 
   @override
   void onInit() async {
     super.onInit();
     id = Get.arguments['id'];
-    
+    scrollController = ScrollController();
+    scrollController.addListener(_onScroll);
      await  fetchOrderDetails();
     
     print('Order ID: $id');
   }
 
-  Future<void> fetchOrderDetails() async {
+
+  void _onScroll() {
+    if (!scrollController.hasClients || 
+        isLoadingMore.value || 
+        !hasMore.value) {
+      return;
+    }
+
+    final threshold = 0.8 * scrollController.position.maxScrollExtent;
+    final currentPosition = scrollController.position.pixels;
+
+    if (currentPosition > threshold ) {
+      fetchOrderDetails(loadMore: true);
+    }
+  }
+
+
+  Future<void> fetchOrderDetails({bool loadMore = false}) async {
+      if ((loadMore && !hasMore.value) || (loadMore && isLoadingMore.value) || (!loadMore && isLoading.value)) {
+      return;
+    }
+
+    loadMore ? isLoadingMore(true) : isLoading(true);
     try {
-      isLoading(true);
+    
+
       final token = storage.getToken();
       if (token == null) return;
+      final url = loadMore && nextCursor.value.isNotEmpty
+          ? 'http://192.168.100.13:8000/api/clients/orders/$id?cursor=${nextCursor.value}'
+          : 'http://192.168.100.13:8000/api/clients/orders/$id';
 
       final response = await http.get(
-        Uri.parse('http://192.168.100.13:8000/api/clients/orders/$id'),
+        Uri.parse(url),
         headers: _buildHeaders(token),
       );
 
       if (response.statusCode == 200) {
+        if(!loadMore) {
+          orderDetails.clear();
+        }
         final Map<String,dynamic> data = json.decode(response.body);
-        for(var item in data['orders']) {
-          orderDetails.add(Order.fromJson(item));
+        for (var item in data['orders']) {
+  final order = Order.fromJson(item);
+  final exists = orderDetails.any((e) => e.id == order.id);
+  if (!exists) {
+    orderDetails.add(order);
+  }
+}
+        if (data['meta'] != null) {
+          nextCursor.value = data['meta']['next_cursor']?.toString() ?? '';
+          hasMore.value = data['meta']['has_more'] ?? false;
         }
         print('Order Details: ${orderDetails.length}');
       }else {
@@ -56,8 +99,11 @@ class SingleOrderController extends GetxController{
       }
     } finally {
       isLoading(false);
+      isLoadingMore(false);
     }
   }
+
+
   Future<void> exportPdf({required String id}) async {
   try {
     // Check and request permissions
