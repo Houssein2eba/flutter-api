@@ -41,11 +41,9 @@ class HomePage extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: clientController.fetchClients,
       child: Obx(() {
-        if (clientController.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (clientController.clients.isEmpty) {
+        
+        if (clientController.clients.isEmpty && !clientController.isLoading.value && !clientController.isSearching.value &&
+         !clientController.search.value.text.isNotEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -91,10 +89,11 @@ class HomePage extends StatelessWidget {
               ),
             ),
 
-            Expanded(
-
-              child: clientController.isSearching.value ? 
+           clientController.isLoading.value || clientController.isSearching.value ? 
                CircularProgressIndicator() :
+                 Expanded(
+
+              child:
                ListView.builder(
                 itemCount: clientController.clients.length,
                 itemBuilder: (context, index) {

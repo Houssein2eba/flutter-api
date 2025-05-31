@@ -18,9 +18,9 @@ class Clientscontroller extends GetxController {
   late final TextEditingController search;
   final storage = Get.find<StorageService>();
   @override
-  void onInit() {
+  void onInit()async {
     search = TextEditingController();
-    fetchClients();
+  await  fetchClients();
     super.onInit();
   }
 
