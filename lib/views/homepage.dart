@@ -66,57 +66,89 @@ class HomePage extends StatelessWidget {
           );
         }
 
-        return ListView.builder(
-          itemCount: clientController.clients.length,
-          itemBuilder: (context, index) {
-            final client = clientController.clients[index];
-            return Card(
-              
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: ListTile(
+        return Column(
+          children: [
+            //search bar
+            Expanded(
+              flex: 0,
+              child: Padding(
                 
-                leading: CircleAvatar(
-                  
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(client.name[0].toUpperCase()),
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: clientController.search,
+                  decoration: InputDecoration(
+                    labelText: 'Search Clients',
+                    border: OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.search),
+                  ),
+                  onChanged: (value) {
+                    if(value.isNotEmpty) {
+                      clientController.fetchClients();
+                    } 
+                    
+                  },
                 ),
-                title: Text(
-                  client.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(client.phone),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () {
-                       Map<String, dynamic> singleclient = {
-                          'id': client.id,
-                          'name': client.name,
-                          'phone': client.phone,
-                        };
-                        Get.toNamed(
-                          RouteClass.getEditClientRoute(),
-                          arguments: singleclient,
-                        );
+              ),
+            ),
+
+            Expanded(
+
+              child: clientController.isSearching.value ? 
+               CircularProgressIndicator() :
+               ListView.builder(
+                itemCount: clientController.clients.length,
+                itemBuilder: (context, index) {
+                  final client = clientController.clients[index];
+                  return Card(
+                    
+                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: ListTile(
+                      
+                      leading: CircleAvatar(
+                        
+                        backgroundColor: Theme.of(context).primaryColor,
+                        child: Text(client.name[0].toUpperCase()),
+                      ),
+                      title: Text(
+                        client.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(client.phone),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () {
+                             Map<String, dynamic> singleclient = {
+                                'id': client.id,
+                                'name': client.name,
+                                'phone': client.phone,
+                              };
+                              Get.toNamed(
+                                RouteClass.getEditClientRoute(),
+                                arguments: singleclient,
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed:
+                                () => _showDeleteDialog(client.id, client.name),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                         
+                        
+                        Get.toNamed(RouteClass.getShowClientRoute(),arguments: {'id':client.id.toString()});
                       },
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed:
-                          () => _showDeleteDialog(client.id, client.name),
-                    ),
-                  ],
-                ),
-                onTap: () {
-                   
-                  
-                  Get.toNamed(RouteClass.getShowClientRoute(),arguments: {'id':client.id.toString()});
+                  );
                 },
               ),
-            );
-          },
+            ),
+          ],
         );
       }),
     );

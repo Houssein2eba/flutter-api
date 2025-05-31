@@ -14,9 +14,12 @@ class Clientscontroller extends GetxController {
   var clients = <Client>[].obs;
   List orders = <Order>[].obs;
   RxBool isLoading = false.obs;
+  RxBool isSearching = false.obs;
+  late final TextEditingController search;
   final storage = Get.find<StorageService>();
   @override
   void onInit() {
+    search = TextEditingController();
     fetchClients();
     super.onInit();
   }
@@ -28,9 +31,14 @@ class Clientscontroller extends GetxController {
         showToast("Authentication token not found", "error");
         return;
       }
-      isLoading.value = true;
+      final url= search.text.isEmpty
+          ? 'http://192.168.100.13:8000/api/clients'
+          : 'http://192.168.100.13:8000/api/clients?search=${search.text}';
+
+      search.text.isEmpty ? isLoading.value = true : isSearching.value = true;
+
       final response = await http.get(
-        Uri.parse('http://192.168.100.13:8000/api/clients'),
+        Uri.parse(url),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -48,6 +56,9 @@ class Clientscontroller extends GetxController {
       showToast("Something went wrong: $e", "error");
     } finally {
       isLoading.value = false;
+      isSearching.value = false;
+      
+       
     }
   }
 
