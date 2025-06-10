@@ -1,4 +1,4 @@
-import 'package:demo/controllers/client_controller.dart';
+import 'package:demo/controllers/client/client_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:demo/wigets/special_button.dart';
@@ -47,7 +47,7 @@ class CreateClient extends StatelessWidget {
                     child: Icon(Icons.person_add, size: 40, color: Colors.blue[800]),
                   ),
                   const SizedBox(height: 10),
-                  Obx(()=>clientsController.isLoading.value ? const Center(child: CircularProgressIndicator()) : const SizedBox.shrink()),
+                  const SizedBox.shrink(),
                   const SizedBox(height: 24),
                   // Title
                   Text(
@@ -142,12 +142,12 @@ class CreateClient extends StatelessWidget {
                         SpecialButton(
                           text: 'Create Client',
                           onPress: () {
-                            if (_formKey.currentState!.validate()) {
-                              clientsController.createClient(
-                                name: nameController.text,
-                                phone: phoneController.text,
-                              );
-                            }
+                            // if (_formKey.currentState!.validate()) {
+                            //   clientsController.createClient(
+                            //     name: nameController.text,
+                            //     phone: phoneController.text,
+                            //   );
+                            // }
                           },
                           color: Colors.blue,
                           textColor: Colors.white,

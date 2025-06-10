@@ -4,7 +4,7 @@ import 'package:demo/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:demo/controllers/client_controller.dart';
+import 'package:demo/controllers/client/client_controller.dart';
 import 'package:demo/routes/web.dart';
 import 'package:demo/wigets/tost.dart';
 

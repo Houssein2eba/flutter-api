@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:demo/functions/handle_validation.dart';
+import 'package:demo/core/functions/handle_validation.dart';
 import 'package:demo/models/order.dart';
 import 'package:demo/services/stored_service.dart';
 import 'package:flutter/material.dart';

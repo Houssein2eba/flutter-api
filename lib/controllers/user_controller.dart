@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-import '../functions/handle_validation.dart';
+import '../core/functions/handle_validation.dart';
 
 class UserController extends GetxController {
   final StorageService storage = Get.find();

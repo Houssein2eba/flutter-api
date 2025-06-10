@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 class ClientDetailsPage extends StatelessWidget {
   final SingleOrderController controller = Get.find();
 
+   ClientDetailsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

@@ -1,6 +1,7 @@
 import 'package:demo/controllers/auth_controller.dart';
-import 'package:demo/controllers/client_controller.dart';
+import 'package:demo/controllers/client/client_controller.dart';
 import 'package:demo/services/ask_permissions.dart';
+import 'package:demo/services/initial_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/routes/web.dart';
 import 'package:get/get.dart';
@@ -109,7 +110,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-
+      initialBinding:InitialBinding() ,
       initialRoute: RouteClass.getDashBoardRoute(),
       getPages: RouteClass.getPages(),
     );

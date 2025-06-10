@@ -1,4 +1,4 @@
-import 'package:demo/middleware/auth_middleware.dart';
+import 'package:demo/core/middleware/auth_middleware.dart';
 import 'package:demo/services/auth_binding.dart';
 import 'package:demo/services/user_binding.dart';
 import 'package:demo/views/auth/login.dart';
@@ -27,9 +27,10 @@ class RouteClass {
   static String dashBoard = "/dashboard";
   static String stocks = "/stocks";
 
+
   static String getStocksRoute() => stocks;
   static String getHomeRoute() => home;
-  static String getLoginRoute() => login; 
+  static String getLoginRoute() => login;
   static String getClientsRoute() => home;
   static String getNotificationsRoute() => notifications;
   static String getCreateClientRoute() => createClient;
@@ -43,58 +44,54 @@ class RouteClass {
   static List<GetPage> getPages() {
     return [
       GetPage(
-        name: dashBoard, 
+        name: dashBoard,
         page: () => DashboardScreen(),
         middlewares: [SanctumAuthMiddleware()],
-        binding: UserBinding()
+        binding: UserBinding(),
       ),
       GetPage(
-        name: home, 
+        name: home,
         page: () => HomePage(),
         middlewares: [SanctumAuthMiddleware()],
-        binding: UserBinding()
+        binding: UserBinding(),
       ),
+      GetPage(name: login, page: () => Login(), binding: AuthBinding()),
       GetPage(
-        name: login, 
-        page: () => Login(),
-        binding: AuthBinding()
-      ),
-      GetPage(
-        name: createClient, 
+        name: createClient,
         page: () => CreateClient(),
-        middlewares: [SanctumAuthMiddleware()]
+        middlewares: [SanctumAuthMiddleware()],
       ),
       GetPage(
-        name: notifications, 
+        name: notifications,
         page: () => NotificationPage(),
         middlewares: [SanctumAuthMiddleware()],
-        binding: UserBinding()
+        binding: UserBinding(),
       ),
       GetPage(
-        name: editClient, 
+        name: editClient,
         page: () {
           final client = Get.arguments as Map<String, dynamic>;
           return EditClientPage(client: client);
         },
-        middlewares: [SanctumAuthMiddleware()]
+        middlewares: [SanctumAuthMiddleware()],
       ),
       GetPage(
-        name: showClient, 
+        name: showClient,
         page: () => ClientDetailsPage(),
         middlewares: [SanctumAuthMiddleware()],
-        binding: UserBinding()
+        binding: UserBinding(),
       ),
       GetPage(
-        name: users, 
+        name: users,
         page: () => UserPage(),
         middlewares: [SanctumAuthMiddleware()],
-        binding: UserBinding()
+        binding: UserBinding(),
       ),
       GetPage(
-        name: createUser, 
+        name: createUser,
         page: () => CreateUser(),
         middlewares: [SanctumAuthMiddleware()],
-        binding: UserBinding()
+        binding: UserBinding(),
       ),
       GetPage(
         name: editUser,
@@ -106,7 +103,7 @@ class RouteClass {
         page: () => StockCard(),
         middlewares: [SanctumAuthMiddleware()],
         binding: UserBinding(),
-      )
+      ),
     ];
   }
 }

@@ -1,5 +1,5 @@
 import "package:demo/controllers/auth_controller.dart";
-import "package:demo/controllers/client_controller.dart";
+import "package:demo/controllers/client/client_controller.dart";
 import "package:demo/controllers/dasboard/dashboard_controller.dart";
 import "package:demo/controllers/notification_controller.dart";
 import "package:demo/controllers/order/single_order_controller.dart";

@@ -1,4 +1,4 @@
-import 'package:demo/controllers/client_controller.dart';
+import 'package:demo/controllers/client/client_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:demo/wigets/special_button.dart';
@@ -32,7 +32,7 @@ class EditClientPage extends GetView<Clientscontroller> {
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.white),
         ),
-        body:Obx(() => controller.isLoading.value ? const Center(child: CircularProgressIndicator()): SafeArea(
+        body:Obx(() =>  SafeArea(
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -142,14 +142,14 @@ class EditClientPage extends GetView<Clientscontroller> {
                         SpecialButton(
                           text: 'Update Client',
                           onPress: () async {
-                            if (_formKey.currentState!.validate()) {
-                              await controller.updateClient(
-                                id: client['id'],
-                                name: _nameController.text,
-                                phone: _phoneController.text,
-                              );
-                              Get.back();
-                            }
+                            // if (_formKey.currentState!.validate()) {
+                            //   await controller.updateClient(
+                            //     id: client['id'],
+                            //     name: _nameController.text,
+                            //     phone: _phoneController.text,
+                            //   );
+                            //   Get.back();
+                            // }
                           },
                           color: Colors.blue,
                           textColor: Colors.white,
