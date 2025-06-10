@@ -160,32 +160,25 @@ class Login extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           // Forgot password
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {
-                                // Forgot password action
-                              },
-                              child: Text(
-                                'Forgot Password?',
-                                style: TextStyle(color: Colors.blue[600]),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 24),
+
+
                           // Login button
-                          SpecialButton(
-                            text: 'login',
-                            onPress: () async {
-                              if (_formKey.currentState!.validate()) {
-                                await authController.login(
-                                  loginController.text,
-                                  passwordController.text,
-                                );
-                              }
-                            },
-                            color: Colors.blue,
-                            textColor: Colors.white,
+                          SizedBox(
+                            width: double.infinity,
+                          
+                            child: SpecialButton(
+                              text: 'login',
+                              onPress: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  await authController.login(
+                                    loginController.text,
+                                    passwordController.text,
+                                  );
+                                }
+                              },
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                            ),
                           ),
                           const SizedBox(height: 24),
                           // Divider with "or"

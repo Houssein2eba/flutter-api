@@ -173,7 +173,7 @@ class _StockCardState extends State<StockCard> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: stock.status == 'Active'
+                          color: stock.status == 'good'
                               ? Colors.green.shade100
                               : Colors.red.shade100,
                           borderRadius: BorderRadius.circular(12),
