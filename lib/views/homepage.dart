@@ -15,6 +15,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: _buildAppBar(),
       body: _buildBody(),
       floatingActionButton: _buildFloatingActionButton(),
@@ -30,16 +31,14 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return SafeArea(
-      child: RefreshIndicator(
-        onRefresh: clientController.fetchClients,
-        child: GetBuilder<Clientscontroller>(
-          builder: (controller) => Column(
-            children: [
-              _buildSearchBar(controller),
-              _buildClientList(controller),
-            ],
-          ),
+    return RefreshIndicator(
+      onRefresh: clientController.fetchClients,
+      child: GetBuilder<Clientscontroller>(
+        builder: (controller) => Column(
+          children: [
+            _buildSearchBar(controller),
+            _buildClientList(controller),
+          ],
         ),
       ),
     );
@@ -112,18 +111,22 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildActionIcons(Client client) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          icon: const Icon(Icons.edit, color: Colors.blue),
-          onPressed: () => _navigateToEditClient(client),
-        ),
-        IconButton(
-          icon: const Icon(Icons.delete, color: Colors.red),
-          onPressed: () => _showDeleteDialog(client.id, client.name),
-        ),
-      ],
+    return GetBuilder<Clientscontroller>(
+      builder: (controller) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit, color: Colors.blue),
+              onPressed: () => controller.goToEditClient(client:client),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () => _showDeleteDialog(client.id, client.name),
+            ),
+          ],
+        );
+      }
     );
   }
 
@@ -142,16 +145,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void _navigateToEditClient(Client client) {
-    Get.toNamed(
-      RouteClass.getEditClientRoute(),
-      arguments: {
-        'id': client.id,
-        'name': client.name,
-        'phone': client.phone,
-      },
-    );
-  }
+
 
   void _showDeleteDialog(String clientId, String clientName) {
     Get.defaultDialog(

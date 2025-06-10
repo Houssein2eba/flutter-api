@@ -7,7 +7,7 @@ import "package:demo/controllers/role_controller.dart";
 import "package:demo/controllers/stock/stocks_controller.dart";
 
 import "package:get/get.dart";
-import "package:demo/controllers/user_controller.dart";
+import "package:demo/controllers/user/user_controller.dart";
 
 class UserBinding extends Bindings {
   @override
@@ -20,6 +20,7 @@ class UserBinding extends Bindings {
     Get.lazyPut(() => Clientscontroller(), fenix: true);
     Get.lazyPut(() => NotificationController(), fenix: true);
     Get.lazyPut(() => SingleOrderController(), fenix: true);
+
 
 
   }

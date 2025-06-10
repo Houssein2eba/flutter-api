@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:demo/controllers/auth_controller.dart';
 import 'package:demo/wigets/special_button.dart';
-import 'package:demo/routes/web.dart';
 
 class Login extends StatelessWidget {
   final TextEditingController loginController = TextEditingController();

@@ -20,7 +20,8 @@ class DashboardScreen extends StatelessWidget {
         children: [
           // User Accounts Drawer Header
           UserAccountsDrawerHeader(
-            accountName: Text(              storage.getUser()?.name ?? 'Inconnu',
+            accountName: Text(       
+                     storage.getUser()?.name ?? 'Inconnu',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

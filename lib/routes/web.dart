@@ -68,12 +68,12 @@ class RouteClass {
         binding: UserBinding(),
       ),
       GetPage(
-        name: editClient,
+        name: getEditClientRoute(),
         page: () {
-          final client = Get.arguments as Map<String, dynamic>;
-          return EditClientPage(client: client);
+          return EditClientScreen();
         },
         middlewares: [SanctumAuthMiddleware()],
+        binding: UserBinding(),
       ),
       GetPage(
         name: showClient,

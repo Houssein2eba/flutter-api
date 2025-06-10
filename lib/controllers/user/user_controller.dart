@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-import '../core/functions/handle_validation.dart';
+import '../../core/functions/handle_validation.dart';
 
 class UserController extends GetxController {
   final StorageService storage = Get.find();
@@ -130,6 +130,7 @@ late  final TextEditingController confirmPasswordController ;
       if (response.statusCode == 200) {
         await fetchUsers();
         Get.snackbar('Success', 'User updated successfully');
+        Get.offNamed(RouteClass.users);
       } else if (response.statusCode == 422) {
         _handleValidationErrors(response);
       }
@@ -177,19 +178,22 @@ late  final TextEditingController confirmPasswordController ;
           'role_id': selectedRoleId.value,
         }),
       );
-      Get.back(); // Close the loading dialog
+      Get.back(); 
 
-      if (response.statusCode == 200) {        UsefulFunctions.showToast(
+      if (response.statusCode == 200) { 
+               UsefulFunctions.showToast(
           'Employé créé avec succès',
           'success',
         );
         await fetchUsers();
+        Get.offNamed(RouteClass.getUsersRoute());
 
         return true;
       } else if (response.statusCode == 422) {
         _handleValidationErrors(response);
         return false;
-      } else {      Get.snackbar(
+      } else {     
+         Get.snackbar(
         'Erreur',
         'Échec de la création de l\'employé ${response.statusCode}',
         );

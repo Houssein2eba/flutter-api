@@ -1,12 +1,10 @@
-import 'package:demo/controllers/auth_controller.dart';
-import 'package:demo/controllers/client/client_controller.dart';
+
 import 'package:demo/services/ask_permissions.dart';
 import 'package:demo/services/initial_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/routes/web.dart';
 import 'package:get/get.dart';
 import 'package:demo/services/stored_service.dart';
-import 'package:demo/controllers/dasboard/dashboard_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +18,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

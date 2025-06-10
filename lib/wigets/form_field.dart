@@ -10,7 +10,7 @@ class CustomFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final IconData icon;
   
-  CustomFormField({
+   CustomFormField({
     Key? key,
     required this.child,
     

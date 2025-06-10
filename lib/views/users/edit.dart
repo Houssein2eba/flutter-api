@@ -1,5 +1,4 @@
-import 'package:demo/controllers/role_controller.dart';
-import 'package:demo/controllers/user_controller.dart';
+import 'package:demo/controllers/user/user_controller.dart';
 import 'package:demo/controllers/user/edit_controller.dart';
 import 'package:demo/wigets/form_field.dart';
 import 'package:demo/wigets/special_button.dart';
@@ -156,9 +155,9 @@ final  UserController roleController = Get.put(UserController());
                         );
                       }),
                       const SizedBox(height: 40),
-                      SpecialButton(                        text: 'Confirmer',
+                      SpecialButton(                      
+                          text: 'Confirmer',
                         onPress: ()async {
-                        
                           if (controller.formKey.currentState!.validate()) {
                           await  controller.updateUser(id: controller.user!.id!);
                           }

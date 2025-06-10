@@ -17,12 +17,9 @@ abstract class AbstractClientsController extends GetxController {
   Future<void> searchClient(String search);
   Future<void> deleteClient({required String id});
   Future<void> createClient({required String name, required String phone});
-  Future<Client?> getClientById(String id);
-  Future<void> updateClient({
-    required String id,
-    required String name,
-    required String phone,
-  });
+
+
+  goToEditClient({required Client client});
 }
 
 class Clientscontroller extends AbstractClientsController {
@@ -37,6 +34,12 @@ class Clientscontroller extends AbstractClientsController {
   final String _baseUrl = 'http://192.168.100.13:8000/api';
 
   @override
+  void onInit() {
+    fetchClients();
+    super.onInit();
+  }
+
+  @override
   Future<void> fetchClients({String? search}) async {
     try {
       isLoading = true;
@@ -47,9 +50,10 @@ class Clientscontroller extends AbstractClientsController {
       statusRequest = handlingData(response);
 
       if (statusRequest == StatusRequest.success) {
-        clients = (response['clients'] as List)
-            .map((json) => Client.fromJson(json))
-            .toList();
+        clients =
+            (response['clients'] as List)
+                .map((json) => Client.fromJson(json))
+                .toList();
 
         if (clients.isEmpty) {
           statusRequest = StatusRequest.failure;
@@ -93,8 +97,6 @@ class Clientscontroller extends AbstractClientsController {
       update();
     }
   }
-  
-
 
   @override
   Future<void> createClient({
@@ -132,73 +134,6 @@ class Clientscontroller extends AbstractClientsController {
     }
   }
 
-  @override
-  Future<Client?> getClientById(String id) async {
-    try {
-      isLoading = true;
-      final token = _storage.getToken();
-
-      if (token == null) {
-        showToast("Authentication token not found", "error");
-        return null;
-      }
-
-      final response = await http.get(
-        Uri.parse('$_baseUrl/clients/$id'),
-        headers: _buildHeaders(token),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return Client.fromJson(data['client']);
-      } else {
-        showToast("Failed to fetch client: ${response.statusCode}", "error");
-        return null;
-      }
-    } catch (e) {
-      showToast("Error fetching client: $e", "error");
-      return null;
-    } finally {
-      isLoading = false;
-    }
-  }
-
-  @override
-  Future<void> updateClient({
-    required String id,
-    required String name,
-    required String phone,
-  }) async {
-    try {
-      isLoading = true;
-      final token = _storage.getToken();
-
-      if (token == null) {
-        showToast("Authentication token not found", "error");
-        return;
-      }
-
-      final response = await http.put(
-        Uri.parse('$_baseUrl/clients/$id'),
-        headers: _buildHeaders(token),
-        body: jsonEncode({'id': id, 'name': name, 'number': phone}),
-      );
-
-      if (response.statusCode == 200) {
-        await fetchClients();
-        showToast("Client updated successfully", "success");
-        Get.offNamed('/');
-      } else {
-        final error = jsonDecode(response.body);
-        showToast("Failed to update client: ${error['error']}", "error");
-      }
-    } catch (e) {
-      showToast("Error updating client: $e", "error");
-    } finally {
-      isLoading = false;
-    }
-  }
-
   Map<String, String> _buildHeaders(String token) {
     return {
       'Authorization': 'Bearer $token',
@@ -206,4 +141,13 @@ class Clientscontroller extends AbstractClientsController {
       'Content-Type': 'application/json',
     };
   }
+
+  @override
+  goToEditClient({required Client client}) {
+    Get.toNamed(RouteClass.getEditClientRoute(), arguments: {'client': client});
+  }
+
+  
+
+
 }

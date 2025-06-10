@@ -1,11 +1,10 @@
-import 'package:demo/controllers/user_controller.dart';
-import 'package:demo/models/user.dart';
+import 'package:demo/controllers/user/user_controller.dart';
 import 'package:demo/routes/web.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UserPage extends StatelessWidget {
-   UserPage({Key? key}) : super(key: key);
+   UserPage({super.key});
 
   final UserController controller = Get.find() ;
   @override

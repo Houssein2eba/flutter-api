@@ -23,7 +23,7 @@ class SingleOrderController extends GetxController{
  final RxBool hasMore = true.obs;
  final RxString nextCursor = ''.obs;
   
-  late final id;
+  late final String id;
 
   @override
   void onInit() async {
@@ -33,7 +33,6 @@ class SingleOrderController extends GetxController{
     scrollController.addListener(_onScroll);
      await  fetchOrderDetails();
     
-    print('Order ID: $id');
   }
 
 
@@ -89,7 +88,6 @@ class SingleOrderController extends GetxController{
           nextCursor.value = data['meta']['next_cursor']?.toString() ?? '';
           hasMore.value = data['meta']['has_more'] ?? false;
         }
-        print('Order Details: ${orderDetails.length}');
       }else {
         Get.snackbar(
           'Error',
@@ -146,7 +144,6 @@ class SingleOrderController extends GetxController{
         final directory = await getApplicationDocumentsDirectory();
         final filePath = '${directory.path}/${responseData['filename']}';
         final file = File(filePath);
-        print("=================$filePath");
         
         // Decode and save the PDF
         final pdfBytes = base64.decode(responseData['pdf']);

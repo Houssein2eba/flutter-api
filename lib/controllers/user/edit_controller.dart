@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:demo/routes/web.dart';
-import 'package:demo/controllers/user_controller.dart';
+import 'package:demo/controllers/user/user_controller.dart';
 
 import 'package:demo/models/user.dart';
 import 'package:demo/services/stored_service.dart';

@@ -31,4 +31,24 @@ class ClientsData {
     });
     return response.fold((l) => l, (r) => r);
   }
+
+
+
+  updateClient({
+    required String id,
+    required String name,
+    required String phone,
+  }) async {
+    String? token = storage.getToken();
+    var response = await crud.putData(
+      "${AppLinks.clients}/$id",
+      {'name': name, 'number': phone},
+      {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+    );
+    return response.fold((l) => l, (r) => r);
+  }
 }

@@ -194,7 +194,7 @@ class ClientDetailsPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('${product.pivot?.quantity ?? 0} x ${product.name}'),
+                    Text('${product.pivot.quantity  } x ${product.name}'),
                     Text('\$${product.price.toStringAsFixed(2)}'),
                   ],
                 ),

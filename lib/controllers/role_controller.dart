@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:demo/models/role.dart';
 import 'package:demo/services/stored_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
