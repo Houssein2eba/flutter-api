@@ -40,12 +40,12 @@ class Authcontroller extends GetxController {
       await storage.saveUser(user);
 
       final clientController = Get.put(Clientscontroller());
-      await clientController.fetchClients();
-      Get.offAllNamed(RouteClass.getDashBoardRoute()); // Navigate to the home page
+            await clientController.fetchClients();
+      Get.offAllNamed(RouteClass.getDashBoardRoute()); 
     } else {
     
       
-      showToast("invalid email or password", "error");
+      showToast("Email ou mot de passe invalide", "error");
     }
     isLoading.value = false;
   }
@@ -59,14 +59,13 @@ class Authcontroller extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      // If the server returns an OK response, parse the JSON.
-      await storage.clearToken();
-      Get.offAllNamed(RouteClass.getLoginRoute()); // Navigate to the login page
+      // If the server returns an OK response, parse the JSON.      await storage.clearToken();
+      Get.offAllNamed(RouteClass.getLoginRoute()); // Naviguer vers la page de connexion
     } else {
     
 
-      // If the server did not return a 200 OK response, throw an exception.
-      showToast("faild to logout", "error");
+      // Si le serveur ne renvoie pas une réponse 200 OK, lever une exception
+      showToast("Échec de la déconnexion", "error");
     }
   }
 }

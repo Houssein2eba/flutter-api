@@ -14,8 +14,7 @@ class ClientDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Client Details'),
+        appBar: AppBar(          title: const Text('Détails du Client'),
           centerTitle: true,
         ),
         body: Obx(() {
@@ -109,8 +108,7 @@ class ClientDetailsPage extends StatelessWidget {
             color: Colors.grey[400],
           ),
           const SizedBox(height: 16),
-          Text(
-            'No Orders Found',
+          Text(            'Aucune Commande Trouvée',
             style: TextStyle(
               fontSize: 18,
               color: Colors.grey[600],
@@ -119,7 +117,7 @@ class ClientDetailsPage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'This client has no order history yet',
+            'Ce client n\'a pas encore d\'historique de commandes',
             style: TextStyle(
               color: Colors.grey[500],
             ),
@@ -156,8 +154,7 @@ class ClientDetailsPage extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: Text(
-                    'Order #${order.reference}',
+                  child: Text(                    'Commande #${order.reference}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -211,11 +208,10 @@ class ClientDetailsPage extends StatelessWidget {
               children: [
                 order.status == 'paid' 
                     ? const Icon(Icons.check_circle, color: Colors.green)
-                    : ElevatedButton(
-                        onPressed: () async {
-                          await controller.markAsPaid(id: order.id);
-                        },
-                        child: const Text('Mark as Paid'),
+                    : ElevatedButton(                          onPressed: () async {
+                            await controller.markAsPaid(id: order.id);
+                          },
+                          child: const Text('Marquer comme Payé'),
                       ),
                 
                 const Text(

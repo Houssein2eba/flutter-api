@@ -26,7 +26,7 @@ class UsefulFunctions {
       final parsedDate = DateTime.parse(date);
       return '${parsedDate.day}/${parsedDate.month}/${parsedDate.year} ${parsedDate.hour}:${parsedDate.minute}';
     } catch (e) {
-      return 'Invalid date';
+      return 'Date invalide';
     }
   }
 

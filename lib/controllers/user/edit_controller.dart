@@ -61,7 +61,7 @@ class EditUserController extends GetxController {
     isLoading.value = false;
 
     if (response.statusCode == 200) {
-      UsefulFunctions.showToast("User updated successfully", "success");
+      UsefulFunctions.showToast("Utilisateur mis à jour avec succès", "success");
       Get.toNamed(RouteClass.getUsersRoute());
       userController.fetchUsers();
     } else {
@@ -69,9 +69,8 @@ class EditUserController extends GetxController {
     }
   }
 
-  bool _validateForm() {
-    if (!formKey.currentState!.validate()) {
-      Get.snackbar('Error', 'Please select a role');
+  bool _validateForm() {    if (!formKey.currentState!.validate()) {
+      Get.snackbar('Erreur', 'Veuillez sélectionner un rôle');
       return false;
     } else {
       return true;

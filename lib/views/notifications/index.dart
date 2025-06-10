@@ -39,7 +39,7 @@ class NotificationPage extends StatelessWidget {
               ? IconButton(
                   icon: _buildMarkAllAsReadIcon(),
                   onPressed: notificationController.markAllAsRead,
-                  tooltip: 'Mark all as read',
+                  tooltip: 'Tout marquer comme lu',
                 )
               : const SizedBox(),
         ),
@@ -103,17 +103,15 @@ class NotificationPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.notifications_off, size: 60, color: Colors.grey),
-          const SizedBox(height: 16),
-          Text('No notifications yet', style: Get.textTheme.titleMedium),
+          const SizedBox(height: 16),          Text('Aucune notification', style: Get.textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
-            'We\'ll notify you when something arrives',
+            'Nous vous informerons lorsque quelque chose arrive',
             style: Get.textTheme.bodyMedium?.copyWith(color: Colors.grey),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: notificationController.fetchNotifications,
-            child: const Text('Refresh'),
+          ElevatedButton(            onPressed: notificationController.fetchNotifications,
+            child: const Text('Actualiser'),
           ),
         ],
       ),
@@ -146,8 +144,7 @@ class NotificationPage extends StatelessWidget {
                   _buildReadStatusIcon(notification),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      notification.message ?? 'No message',
+                    child: Text(                      notification.message ?? 'Pas de message',
                       style: TextStyle(
                         fontWeight: notification.isRead 
                             ? FontWeight.normal 
@@ -177,11 +174,10 @@ class NotificationPage extends StatelessWidget {
   }
 
   Future<void> _handleDismiss(Notificatione notification) async {
-    final confirmed = await Get.defaultDialog<bool>(
-      title: 'Delete Notification',
-      middleText: 'Are you sure you want to delete this notification?',
-      textConfirm: 'Delete',
-      textCancel: 'Cancel',
+    final confirmed = await Get.defaultDialog<bool>(      title: 'Supprimer la Notification',
+      middleText: 'Êtes-vous sûr de vouloir supprimer cette notification ?',
+      textConfirm: 'Supprimer',
+      textCancel: 'Annuler',
       confirmTextColor: Colors.white,
       buttonColor: Colors.red,
       cancelTextColor: Colors.blue,
@@ -190,10 +186,9 @@ class NotificationPage extends StatelessWidget {
     );
 
     if (confirmed == true) {
-      await notificationController.deleteNotification(notification.id!);
-      Get.snackbar(
-        'Deleted',
-        'Notification has been deleted',
+      await notificationController.deleteNotification(notification.id!);      Get.snackbar(
+        'Supprimé',
+        'La notification a été supprimée',
         snackPosition: SnackPosition.BOTTOM,
       );
     }

@@ -152,14 +152,13 @@ late  final TextEditingController confirmPasswordController ;
     final errorMessage = errors.entries
         .map((e) => '${e.key}: ${e.value.join(', ')}')
         .join('\n');
-    Get.snackbar('Validation Error', errorMessage);
+    Get.snackbar('Erreur de Validation', errorMessage);
   }
 
   Future<bool> createEmployee() async {
     try {
-      final token = storage.getToken();
-      if (token == null) {
-        Get.snackbar('Error', 'Authentication token not found');
+      final token = storage.getToken();      if (token == null) {
+        Get.snackbar('Erreur', 'Jeton d\'authentification non trouvé');
         return false;
       }
       Get.dialog(
@@ -180,9 +179,8 @@ late  final TextEditingController confirmPasswordController ;
       );
       Get.back(); // Close the loading dialog
 
-      if (response.statusCode == 200) {
-        UsefulFunctions.showToast(
-          'Employee created successfully',
+      if (response.statusCode == 200) {        UsefulFunctions.showToast(
+          'Employé créé avec succès',
           'success',
         );
         await fetchUsers();
@@ -191,10 +189,9 @@ late  final TextEditingController confirmPasswordController ;
       } else if (response.statusCode == 422) {
         _handleValidationErrors(response);
         return false;
-      } else {
-        Get.snackbar(
-          'Error',
-          'Failed to create employee ${response.statusCode}',
+      } else {      Get.snackbar(
+        'Erreur',
+        'Échec de la création de l\'employé ${response.statusCode}',
         );
         return false;
       }

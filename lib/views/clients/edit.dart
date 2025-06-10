@@ -51,8 +51,7 @@ class EditClientPage extends GetView<Clientscontroller> {
                   ),
                   const SizedBox(height: 24),
                   // Title
-                  Text(
-                    'Edit Client Details',
+                  Text(                    'Modifier les Détails du Client',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.blue[800],
@@ -61,7 +60,7 @@ class EditClientPage extends GetView<Clientscontroller> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Update the client information',
+                    'Mettre à jour les informations du client',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.grey[600],
                         ),
@@ -76,8 +75,7 @@ class EditClientPage extends GetView<Clientscontroller> {
                         TextFormField(
                           
                           controller: _nameController,
-                          decoration: InputDecoration(
-                            labelText: 'Full Name',
+                          decoration: InputDecoration(                            labelText: 'Nom Complet',
                             labelStyle: TextStyle(color: Colors.grey[600]),
                             prefixIcon: Icon(
                               Icons.person_outline,
@@ -100,9 +98,8 @@ class EditClientPage extends GetView<Clientscontroller> {
                                 width: 2,
                               ),
                             ),
-                          ),
-                          validator: (value) =>
-                              value == null || value.isEmpty ? 'Please enter a name' : null,
+                          ),                          validator: (value) =>
+                              value == null || value.isEmpty ? 'Veuillez saisir un nom' : null,
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
@@ -138,9 +135,9 @@ class EditClientPage extends GetView<Clientscontroller> {
                               value == null || value.isEmpty ? 'Please enter a phone number' : null,
                         ),
                         const SizedBox(height: 40),
-                        // Update button
-                        SpecialButton(
-                          text: 'Update Client',
+                        // Update button       
+                                        SpecialButton(
+                          text: 'Mettre à Jour',
                           onPress: () async {
                             // if (_formKey.currentState!.validate()) {
                             //   await controller.updateClient(

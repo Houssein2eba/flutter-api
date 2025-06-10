@@ -92,8 +92,7 @@ class UserPage extends StatelessWidget {
               children: [
                 const Icon(Icons.phone, size: 16, color: Colors.grey),
                 const SizedBox(width: 8),
-                Text(
-                  user.phone ?? 'No phone number',
+                Text(                  user.phone ?? 'Pas de numéro de téléphone',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -108,25 +107,24 @@ class UserPage extends StatelessWidget {
                   onPressed: ()  {
                     controller.goToEdit(user);
                   },
-                  child: const Text('EDIT'),
+                  child: const Text('MODIFIER'),
                 ),
                 const SizedBox(width: 8),
                 TextButton(
                   onPressed: () {
                   
-                    Get.defaultDialog(
-                      title: 'Delete User',
-                      content: Text('Are you sure you want to delete ${user.name}?'),
-                      confirm: TextButton(
-                        onPressed: () async {
-                          Get.back();
-                          await controller.deleteUser(user.id!);
-                        },
-                        child: const Text('DELETE', style: TextStyle(color: Colors.red)),
-                      ),
-                      cancel: TextButton(
-                        onPressed: () => Get.back(),
-                        child: const Text('CANCEL'),
+                    Get.defaultDialog(                  title: 'Supprimer l\'Utilisateur',
+                  content: Text('Êtes-vous sûr de vouloir supprimer ${user.name}?'),
+                  confirm: TextButton(
+                    onPressed: () async {
+                      Get.back();
+                      await controller.deleteUser(user.id!);
+                    },
+                    child: const Text('SUPPRIMER', style: TextStyle(color: Colors.red)),
+                  ),
+                  cancel: TextButton(
+                    onPressed: () => Get.back(),
+                    child: const Text('ANNULER'),
                       ),
                     );
                   },

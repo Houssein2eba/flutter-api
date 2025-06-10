@@ -42,8 +42,7 @@ class Login extends StatelessWidget {
                       }
                 
                       // Show welcome message when not loading
-                      return Text(
-                        'Stock Management System',
+                      return Text(                        'Système de Gestion de Stock',
                         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.blue[800],
@@ -52,8 +51,7 @@ class Login extends StatelessWidget {
                       );
                     }),
                     const SizedBox(height: 8),
-                    Text(
-                      'Sign in to continue',
+                    Text(                      'Connectez-vous pour continuer',
                       style: Theme.of(
                         context,
                       ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
@@ -68,8 +66,7 @@ class Login extends StatelessWidget {
                           TextFormField(
                             controller: loginController,
                             keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              labelText: 'Email or Phone',
+                            decoration: InputDecoration(                              labelText: 'Email ou Téléphone',
                               labelStyle: TextStyle(color: Colors.grey[600]),
                               prefixIcon: Icon(
                                 Icons.person,
@@ -94,14 +91,13 @@ class Login extends StatelessWidget {
                               ),
                             ),
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your email or phone number';
+                              if (value == null || value.isEmpty) {                                return 'Veuillez saisir votre email ou numéro de téléphone';
                               }
                               if (!value.contains('@')) {
                                 if (RegExp(r'^[2-4][0-9]{7}$').hasMatch(value)) {
                                   return null;
                                 }
-                                return 'Please enter a valid email or phone number';
+                                return 'Veuillez saisir un email ou numéro de téléphone valide';
                               }
                               return null;
                             },
@@ -111,8 +107,7 @@ class Login extends StatelessWidget {
                             () => TextFormField(
                               controller: passwordController,
                               obscureText: isPasswordHidden.value,
-                              decoration: InputDecoration(
-                                labelText: 'Password',
+                              decoration: InputDecoration(                                labelText: 'Mot de passe',
                                 labelStyle: TextStyle(color: Colors.grey[600]),
                                 prefixIcon: Icon(
                                   Icons.lock,
@@ -149,9 +144,8 @@ class Login extends StatelessWidget {
                                   },
                                 ),
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your password';
+                              validator: (value) {                                if (value == null || value.isEmpty) {
+                                  return 'Veuillez saisir votre mot de passe';
                                 }
                 
                                 return null;
@@ -165,9 +159,8 @@ class Login extends StatelessWidget {
                           // Login button
                           SizedBox(
                             width: double.infinity,
-                          
                             child: SpecialButton(
-                              text: 'login',
+                              text: 'Connexion',
                               onPress: () async {
                                 if (_formKey.currentState!.validate()) {
                                   await authController.login(

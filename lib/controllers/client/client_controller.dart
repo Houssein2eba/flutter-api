@@ -1,330 +1,209 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:demo/core/class/status_request.dart';
 import 'package:demo/core/functions/handeling_data.dart';
 import 'package:demo/data/remote/clients_data.dart';
-import 'package:demo/models/Client.dart';
+import 'package:demo/models/client.dart';
 import 'package:demo/routes/web.dart';
-
-import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
-
+import 'package:demo/services/stored_service.dart';
 import 'package:demo/wigets/tost.dart';
 
-abstract class AbstactClientscontroller extends GetxController {
-  fetchClients();
-  searchClient(String search);
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+abstract class AbstractClientsController extends GetxController {
+  Future<void> fetchClients({String? search});
+  Future<void> searchClient(String search);
+  Future<void> deleteClient({required String id});
+  Future<void> createClient({required String name, required String phone});
+  Future<Client?> getClientById(String id);
+  Future<void> updateClient({
+    required String id,
+    required String name,
+    required String phone,
+  });
 }
 
-class Clientscontroller extends AbstactClientscontroller {
-  var clients = <Client>[];
+class Clientscontroller extends AbstractClientsController {
+  final ClientsData _clientsData = ClientsData(Get.find());
+  final StorageService _storage = Get.find<StorageService>();
+
+  List<Client> clients = <Client>[];
   StatusRequest statusRequest = StatusRequest.none;
-  ClientsData clientsData = ClientsData(Get.find());
+  bool isLoading = false;
+  final TextEditingController searchController = TextEditingController();
 
-  late final TextEditingController search;
-
-  @override
-  void onInit() async {
-    search = TextEditingController();
-    await fetchClients();
-
-    super.onInit();
-  }
-
-  goToOrders(String id) {
-    Get.toNamed(RouteClass.showClient, arguments: {"id": id});
-  }
+  final String _baseUrl = 'http://192.168.100.13:8000/api';
 
   @override
   Future<void> fetchClients({String? search}) async {
     try {
+      isLoading = true;
       statusRequest = StatusRequest.loading;
       update();
-      var response = await clientsData.getClients(search: search);
 
+      final response = await _clientsData.getClients(search: search);
       statusRequest = handlingData(response);
+
       if (statusRequest == StatusRequest.success) {
-        for (var element in response['clients']) {
-          clients.add(Client.fromJson(element));
-        }
+        clients = (response['clients'] as List)
+            .map((json) => Client.fromJson(json))
+            .toList();
+
         if (clients.isEmpty) {
           statusRequest = StatusRequest.failure;
         }
       }
     } catch (e) {
-      showToast("Something went wrong: $e", "error");
+      statusRequest = StatusRequest.serverFailure;
+      showToast("Error fetching clients: $e", "error");
+    } finally {
+      isLoading = false;
+      update();
     }
-    update();
   }
 
-@override
-  void searchClient(String search) {
+  @override
+  Future<void> searchClient(String search) async {
     if (search.isEmpty) {
-      fetchClients();
+      await fetchClients();
     } else {
-      fetchClients(search: search);
+      await fetchClients(search: search);
     }
   }
 
+  @override
   Future<void> deleteClient({required String id}) async {
+    try {
       statusRequest = StatusRequest.loading;
       update();
-      var response=await clientsData.deleteClient(id: id);
+
+      final response = await _clientsData.deleteClient(id: id);
       statusRequest = handlingData(response);
-      if(statusRequest==StatusRequest.success){
-        clients.removeWhere((element) => element.id==id);
-        await fetchClients();
+
+      if (statusRequest == StatusRequest.success) {
+        clients.removeWhere((client) => client.id == id);
+        showToast("Client deleted successfully", "success");
+        update();
       }
+    } catch (e) {
+      statusRequest = StatusRequest.serverFailure;
+      showToast("Error deleting client: $e", "error");
       update();
     }
+  }
+  
 
-    // Future<void> createClient({
-    //   required String name,
-    //   required String phone,
-    // }) async {
-    //   try {
-    //     isLoading.value = true;
-    //     final token = storage.getToken();
 
-    //     if (token == null) {
-    //       showToast("Authentication token not found", "error");
-    //       return;
-    //     }
+  @override
+  Future<void> createClient({
+    required String name,
+    required String phone,
+  }) async {
+    try {
+      isLoading = true;
+      final token = _storage.getToken();
 
-    //     final response = await http.post(
-    //       Uri.parse('http://192.168.100.13:8000/api/clients'),
-    //       headers: {
-    //         'Authorization': 'Bearer $token',
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json',
-    //       },
-    //       body: jsonEncode({'name': name, 'number': phone}),
-    //     );
+      if (token == null) {
+        showToast("Authentication token not found", "error");
+        return;
+      }
 
-    //     if (response.statusCode == 200 || response.statusCode == 201) {
-    //       showToast("Client created successfully", "success");
-    //       final data = jsonDecode(response.body);
-    //       final client = data['client'];
-    //       // Navigate to the home page
-    //       clients.add(Client.fromJson(client));
-    //       Get.toNamed('/');
-    //     } else {
-    //       final error = jsonDecode(response.body);
-    //       showToast("Failed to create client: ${error['error']}", "error");
-    //     }
-    //   } catch (e) {
-    //     showToast("Something went wrong: $e", "error");
-    //   }
+      final response = await http.post(
+        Uri.parse('$_baseUrl/clients'),
+        headers: _buildHeaders(token),
+        body: jsonEncode({'name': name, 'number': phone}),
+      );
 
-    //   isLoading.value = false;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        clients.add(Client.fromJson(data['client']));
+        showToast("Client created successfully", "success");
+        Get.offNamed('/');
+      } else {
+        final error = jsonDecode(response.body);
+        showToast("Failed to create client: ${error['error']}", "error");
+      }
+    } catch (e) {
+      showToast("Error creating client: $e", "error");
+    } finally {
+      isLoading = false;
+    }
   }
 
+  @override
   Future<Client?> getClientById(String id) async {
-    // try {
-    //   isLoading.value = true;
-    //   final token = storage.getToken();
-    //   if (token == null) {
-    //     showToast("Authentication token not found", "error");
-    //     return null;
-    //   }
-    //   final response = await http.get(
-    //     Uri.parse('http://192.168.100.13:8000/api/clients/$id'),
-    //     headers: {
-    //       'Authorization': 'Bearer $token',
-    //       'Accept': 'application/json',
-    //       'Content-Type': 'application/json',
-    //     },
-    //   );
-    //   isLoading.value = false;
-    //   if (response.statusCode == 200) {
-    //     final data = jsonDecode(response.body);
-    //     final client = data['client'];
-    //     return Client.fromJson(client);
-    //   } else {
-    //     showToast("Failed to get client: ${response.statusCode}", "error");
-    //     return null;
-    //   }
-    // } catch (e) {
-    //   showToast("Something went wrong: $e", "error");
-    //   return null;
-    // }
+    try {
+      isLoading = true;
+      final token = _storage.getToken();
+
+      if (token == null) {
+        showToast("Authentication token not found", "error");
+        return null;
+      }
+
+      final response = await http.get(
+        Uri.parse('$_baseUrl/clients/$id'),
+        headers: _buildHeaders(token),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return Client.fromJson(data['client']);
+      } else {
+        showToast("Failed to fetch client: ${response.statusCode}", "error");
+        return null;
+      }
+    } catch (e) {
+      showToast("Error fetching client: $e", "error");
+      return null;
+    } finally {
+      isLoading = false;
+    }
   }
 
-  Future updateClient({
+  @override
+  Future<void> updateClient({
     required String id,
     required String name,
     required String phone,
   }) async {
-    // try {
-    //   isLoading.value = true;
-    //   final token = storage.getToken();
-    //   if (token == null) {
-    //     showToast("Authentication token not found", "error");
-    //     return;
-    //   }
+    try {
+      isLoading = true;
+      final token = _storage.getToken();
 
-    //   final requestbody = jsonEncode({"id": id, "name": name, "number": phone});
+      if (token == null) {
+        showToast("Authentication token not found", "error");
+        return;
+      }
 
-    //   final response = await http.put(
-    //     Uri.parse('http://192.168.100.13:8000/api/clients/$id'),
-    //     headers: {
-    //       'Authorization': 'Bearer $token',
-    //       'Accept': 'application/json',
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: requestbody,
-    //   );
-    //   if (response.statusCode == 200) {
-    //     showToast("Client updated successfully", "success");
+      final response = await http.put(
+        Uri.parse('$_baseUrl/clients/$id'),
+        headers: _buildHeaders(token),
+        body: jsonEncode({'id': id, 'name': name, 'number': phone}),
+      );
 
-    //     fetchClients();
-
-    //     Get.toNamed('/');
-    //   } else {
-    //     final errorData = jsonDecode(response.body);
-
-    //     showToast("Failed to update client: ${errorData['error']}", "error");
-    //   }
-    // } catch (e) {
-    //   showToast("Something went wrong: $e", "error");
-    // }
-
-    // isLoading.value = false;
+      if (response.statusCode == 200) {
+        await fetchClients();
+        showToast("Client updated successfully", "success");
+        Get.offNamed('/');
+      } else {
+        final error = jsonDecode(response.body);
+        showToast("Failed to update client: ${error['error']}", "error");
+      }
+    } catch (e) {
+      showToast("Error updating client: $e", "error");
+    } finally {
+      isLoading = false;
+    }
   }
 
-  Future<void> getOrders({required String id}) async {
-    // try {
-    //   isLoading.value = true;
-    //   orders.clear();
-    //   final token = storage.getToken();
-    //   if (token == null) {
-    //     showToast("Authentication token not found", "error");
-    //     return;
-    //   }
-
-    //   final response = await http.get(
-    //     Uri.parse('http://192.168.100.13:8000/api/clients/orders/$id'),
-    //     headers: {
-    //       'Authorization': 'Bearer $token',
-    //       'Accept': 'application/json',
-    //       'Content-Type': 'application/json',
-    //     },
-    //   );
-
-    //   if (response.statusCode == 200) {
-    //     final responseData = json.decode(response.body);
-
-    //     List<Order> fetchedOrders = [];
-
-    //     // Case 1: Response contains 'orders' key
-    //     if (responseData.containsKey('orders')) {
-    //       if (responseData['orders'] is List) {
-    //         fetchedOrders =
-    //             (responseData['orders'] as List)
-    //                 .map<Order>((orderJson) => Order.fromJson(orderJson))
-    //                 .toList();
-    //       }
-    //       // Handle case where 'orders' is a single order Map
-    //       else if (responseData['orders'] is Map) {
-    //         fetchedOrders = [Order.fromJson(responseData['orders'])];
-    //       } else {
-    //         throw FormatException(
-    //           'Expected List or Map for orders, got ${responseData['orders'].runtimeType}',
-    //         );
-    //       }
-    //     }
-    //     // Case 2: Response is directly a List of orders
-    //     else if (responseData is List) {
-    //       fetchedOrders =
-    //           (responseData as List)
-    //               .map<Order>((orderJson) => Order.fromJson(orderJson))
-    //               .toList();
-    //     }
-    //     // Unexpected format
-    //     else {
-    //       throw FormatException(
-    //         'Unexpected response format: ${responseData.runtimeType}',
-    //       );
-    //     }
-
-    //     if (fetchedOrders.isNotEmpty) {
-    //       orders.assignAll(fetchedOrders);
-    //     } else {
-    //       Get.snackbar('Info', 'No orders found');
-    //     }
-    //   } else {
-    //     throw HttpException('Failed to load orders');
-    //   }
-    // } on FormatException catch (e) {
-    //   ;
-    //   showToast(e.message, "error");
-    // } on HttpException catch (e) {
-    //   showToast(e.message, "error");
-    // } catch (e, stackTrace) {
-    //   showToast("Something went wrong: $e", "error");
-    // }
-
-    // isLoading.value = false;
+  Map<String, String> _buildHeaders(String token) {
+    return {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
   }
-
-  Future<void> markAsPaid({required String id}) async {
-    // isLoading.value = true;
-    // final token = storage.getToken();
-    // if (token == null) {
-    //   showToast("Authentication token not found", "error");
-    //   return;
-    // }
-
-    // final response = await http.put(
-    //   Uri.parse('http://192.168.100.13:8000/api/clients/orders/mark-paid/$id'),
-    //   headers: {
-    //     'Authorization': 'Bearer $token',
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    // );
-    // if (response.statusCode == 200) {
-    //   showToast("Order marked as paid successfully", "success");
-    //   final index = orders.indexWhere((order) => order.id == id);
-
-    //   if (index != -1) {
-    //     // Create a new Order object with updated status
-    //     final updatedOrder = orders[index].copyWith(status: 'paid');
-
-    //     // Update the list immutably
-    //     orders[index] = updatedOrder;
-    //   }
-    // } else {
-    //   showToast("Failed to mark order as paid", "error");
-    // }
-
-    // isLoading.value = false;
-  }
-
-  Future<void> exportPdf({required String id}) async {
-    // isLoading.value = true;
-    // final token = storage.getToken();
-    // if (token == null) {
-    //   showToast("Authentication token not found", "error");
-    //   return;
-    // }
-
-    // final response = await http.get(
-    //   Uri.parse('http://192.168.100.13:8000/api/clients/orders/export-pdf/$id'),
-    //   headers: {
-    //     'Authorization': 'Bearer $token',
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    // );
-    // if (response.statusCode == 200) {
-    //   showToast("PDF exported successfully", "success");
-    // } else {
-    //   showToast("Failed to export PDF", "error");
-    // }
-
-    // isLoading.value = false;
-  }
-
+}

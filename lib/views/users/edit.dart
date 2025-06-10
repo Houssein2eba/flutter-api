@@ -52,8 +52,7 @@ final  UserController roleController = Get.put(UserController());
                 ),
                 const SizedBox(height: 24),
                 // Title
-                Text(
-                  'Edit Employee',
+                Text(                    'Modifier l\'Employé',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.blue[800],
@@ -62,7 +61,7 @@ final  UserController roleController = Get.put(UserController());
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Update the employee details',
+                  'Mettre à jour les détails de l\'employé',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.grey[600],
                   ),
@@ -139,15 +138,14 @@ final  UserController roleController = Get.put(UserController());
                               value: controller.selectedRoleId.value.isEmpty 
                                   ? null 
                                   : controller.selectedRoleId.value,
-                              isExpanded: true,
-                              hint: const Text('Select Role'),
-                              items: roleController.roles.map((role) {
-                                return DropdownMenuItem<String>(
-                                  value: role!.id.toString(),
-                                  child: Text(role.name!),
-                                );
-                              }).toList(),
-                              validator: (value) => value == null ? 'Please select a role' : null,
+                              isExpanded: true,                                hint: const Text('Sélectionner un Rôle'),
+                                items: roleController.roles.map((role) {
+                                  return DropdownMenuItem<String>(
+                                    value: role!.id.toString(),
+                                    child: Text(role.name!),
+                                  );
+                                }).toList(),
+                                validator: (value) => value == null ? 'Veuillez sélectionner un rôle' : null,
                               onChanged: (String? value) {
                                 if (value != null) {
                                   controller.selectedRoleId.value = value;
@@ -158,8 +156,7 @@ final  UserController roleController = Get.put(UserController());
                         );
                       }),
                       const SizedBox(height: 40),
-                      SpecialButton(
-                        text: 'Confirm',
+                      SpecialButton(                        text: 'Confirmer',
                         onPress: ()async {
                         
                           if (controller.formKey.currentState!.validate()) {

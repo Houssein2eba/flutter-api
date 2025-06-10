@@ -20,14 +20,13 @@ class DashboardScreen extends StatelessWidget {
         children: [
           // User Accounts Drawer Header
           UserAccountsDrawerHeader(
-            accountName: Text(
-              storage.getUser()?.name ?? 'Unknown',
+            accountName: Text(              storage.getUser()?.name ?? 'Inconnu',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            accountEmail: Text(storage.getUser()?.email ?? 'Unknown'),
+            accountEmail: Text(storage.getUser()?.email ?? 'Inconnu'),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: ClipOval(
@@ -51,9 +50,8 @@ class DashboardScreen extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                ListTile(
-                  leading: const Icon(Icons.work),
-                  title: const Text('Employees'),
+                ListTile(                  leading: const Icon(Icons.work),
+                  title: const Text('Employés'),
                   onTap: () {
                     // dashboardController.fetchDashboard();
                     Get.toNamed(RouteClass.getUsersRoute());
@@ -78,7 +76,7 @@ class DashboardScreen extends StatelessWidget {
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.help),
-                  title: const Text('Help & Feedback'),
+                  title:                const Text('Aide & Retour'),
                   onTap: () {
                     Navigator.pop(context);
                     // Navigate to help
@@ -118,8 +116,7 @@ class DashboardScreen extends StatelessWidget {
     )
   ,
       appBar: AppBar(
-        
-        title: Text('Dashboard', 
+          title: Text('Tableau de Bord', 
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -147,20 +144,18 @@ class DashboardScreen extends StatelessWidget {
             child: Column(
               children: [
                 // Inventory Summary
-                _DashboardCard(
-                  title: "Inventory Summary",
+                _DashboardCard(                  title: "Résumé de l'Inventaire",
                   children: [
                     _StatItem(icon: Icons.group, color: Colors.green, label: 'Clients', value: controller.dashboard.value!.clientCount.toString()),
                     _StatItem(
                       icon: Icons.inventory_2_rounded,
                       color: Colors.blue,
-                      label: "Total Products",
+                      label: "Produits Totaux",
                       value: controller.dashboard.value!.totalProducts.toString(),
                     ),
-                    _StatItem(
-                      icon: Icons.warning_amber_rounded,
+                    _StatItem(                      icon: Icons.warning_amber_rounded,
                       color: Colors.orange,
-                      label: "Low Products",
+                      label: "Produits Faibles",
                       value: controller.dashboard.value!.lowStockCount.toString(),
                     ),
                     _StatItem(
@@ -169,30 +164,26 @@ class DashboardScreen extends StatelessWidget {
                       label: "Stocks",
                       value: controller.dashboard.value!.stocksCount.toString()
                     ),
-                    _StatItem(
-                      icon: Icons.category_rounded,
+                    _StatItem(                      icon: Icons.category_rounded,
                       color: Colors.purple,
-                      label: "Categories",
+                      label: "Catégories",
                       value: controller.dashboard.value!.totalCategories.toString(),
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
-
-                // Sales Overview
+                SizedBox(height: 16),                // Sales Overview
                 _DashboardCard(
-                  title: "Sales Overview",
+                  title: "Aperçu des Ventes",
                   children: [
                     _StatItem(
                       icon: Icons.shopping_cart_rounded,
-                      color: Colors.green,
-                      label: "Total Sales",
+                      color: Colors.green,                      label: "Ventes Totales",
                       value: controller.dashboard.value!.totalSales.toString(),
                     ),
                     _StatItem(
                       icon: Icons.today_rounded,
                       color: Colors.amber,
-                      label: "Today's Sales",
+                      label: "Ventes du Jour",
                       value: controller.dashboard.value!.todaySales.toString(),
                     ),
                   ],
@@ -200,41 +191,38 @@ class DashboardScreen extends StatelessWidget {
                 SizedBox(height: 16),
 
                 // Financial Summary
-                _DashboardCard(
-                  title: "Financial Summary",
+                _DashboardCard(                  title: "Résumé Financier",
                   children: [
                                         _StatItem(
                       icon: Icons.money_rounded,
                       color: Colors.red,
-                      label: "Today's Revenue",
+                      label: "Revenus du Jour",
                       value: "${controller.dashboard.value!.totalRevenue?.toStringAsFixed(2) ?? '0.00'} MRU",
                       isCurrency: true,
-                    ),
-                    _StatItem(
+                    ),                    _StatItem(
                       icon: Icons.attach_money_rounded,
                       color: Colors.teal,
-                      label: "Total Revenue",
+                      label: "Revenus Totaux",
                       value: "${controller.dashboard.value!.todayRevenue?.toStringAsFixed(2) ?? '0.00'} MRU",
                       isCurrency: true,
                     ),
                     _StatItem(
                       icon: Icons.account_balance_wallet_rounded,
                       color: Colors.green,
-                      label: "Paid Amount",
+                      label: "Montant Payé",
                       value: "${controller.dashboard.value!.paidAmount?.toStringAsFixed(2) ?? '0.00'} MRU",
                       isCurrency: true,
                     ),
-                    _StatItem(
-                      icon: Icons.receipt_long_rounded,
+                    _StatItem(                      icon: Icons.receipt_long_rounded,
                       color: Colors.orange,
-                      label: "Unpaid Amount",
+                      label: "Montant Non Payé",
                       value: "${controller.dashboard.value!.dueAmount?.toStringAsFixed(2) ?? '0.00'} MRU",
                       isCurrency: true,
                     ),
                     _StatItem(
                       icon: Icons.trending_up_rounded,
-                      color: Colors.indigo,
-                      label: "Total Profit",
+            color: Colors.indigo,
+                      label: "Profit Total",
                       value: "${controller.dashboard.value!.totalProfit?.toStringAsFixed(2) ?? '0.00'} MRU",
                       isCurrency: true,
                     ),
@@ -280,14 +268,13 @@ class DashboardScreen extends StatelessWidget {
         children: [
           Icon(Icons.error_outline, size: 48, color: Colors.red),
           SizedBox(height: 16),
-          Text(
-            'Failed to load dashboard data',
-            style: TextStyle(fontSize: 18),
+          Text(          'Échec du chargement des données du tableau de bord',
+          style: TextStyle(fontSize: 18),
           ),
           SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => controller.fetchDashboard(),
-            child: Text('Retry'),
+            child: Text('Réessayer'),
           ),
         ],
       ),

@@ -50,8 +50,7 @@ class CreateClient extends StatelessWidget {
                   const SizedBox.shrink(),
                   const SizedBox(height: 24),
                   // Title
-                  Text(
-                    'Add New Client',
+                  Text(                    'Ajouter un Nouveau Client',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.blue[800],
@@ -60,7 +59,7 @@ class CreateClient extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Fill in the client details',
+                    'Remplissez les détails du client',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey[600],
                     ),
@@ -74,8 +73,7 @@ class CreateClient extends StatelessWidget {
                       children: [
                         TextFormField(
                           controller: nameController,
-                          decoration: InputDecoration(
-                            labelText: 'Full Name',
+                          decoration: InputDecoration(                            labelText: 'Nom Complet',
                             labelStyle: TextStyle(color: Colors.grey[600]),
                             prefixIcon: Icon(
                               Icons.person_outline,
@@ -95,10 +93,9 @@ class CreateClient extends StatelessWidget {
                                 width: 2,
                               ),
                             ),
-                          ),
-                          validator: (value) {
+                          ),                          validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter client name';
+                              return 'Veuillez saisir le nom du client';
                             }
                             return null;
                           },
@@ -107,8 +104,7 @@ class CreateClient extends StatelessWidget {
                         TextFormField(
                           controller: phoneController,
                           keyboardType: TextInputType.phone,
-                          decoration: InputDecoration(
-                            labelText: 'Phone Number',
+                          decoration: InputDecoration(                            labelText: 'Numéro de Téléphone',
                             labelStyle: TextStyle(color: Colors.grey[600]),
                             prefixIcon: Icon(
                               Icons.phone_outlined,
@@ -126,21 +122,19 @@ class CreateClient extends StatelessWidget {
                               borderSide: Theme.of(context).inputDecorationTheme.border!.borderSide,
                             ),
                             hintText: 'e.g. 21234567',
-                          ),
-                          validator: (value) {
+                          ),                          validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter phone number';
+                              return 'Veuillez saisir le numéro de téléphone';
                             }  
                             if (!RegExp(r'^[2-4][0-9]{7}$').hasMatch(value)) {
-                              return 'Please enter a valid phone number';
+                              return 'Veuillez saisir un numéro de téléphone valide';
                             }
                             return null;
                           },
                         ),
-                        const SizedBox(height: 40),
-                        // Create button
+                        const SizedBox(height: 40),                        // Create button
                         SpecialButton(
-                          text: 'Create Client',
+                          text: 'Créer Client',
                           onPress: () {
                             // if (_formKey.currentState!.validate()) {
                             //   clientsController.createClient(

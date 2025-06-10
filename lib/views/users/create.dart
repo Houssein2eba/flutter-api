@@ -16,9 +16,8 @@ class CreateUser extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: const Text(
-          'Create Employee',
+      appBar: AppBar(        title: const Text(
+          'Créer un Employé',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -55,8 +54,7 @@ class CreateUser extends StatelessWidget {
                             child: Icon(Icons.person_add, size: 32, color: Colors.blue[800]),
                           ),
                           const SizedBox(height: 12),
-                          Text(
-                            'Add New Employee',
+                          Text(                            'Ajouter un Nouvel Employé',
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.blue[800],
@@ -64,7 +62,7 @@ class CreateUser extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
                           Text(
-                            'Fill in the employee details',
+                            'Remplissez les informations de l\'employé',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.grey[600],
                             ),
@@ -83,28 +81,26 @@ class CreateUser extends StatelessWidget {
                               CustomFormField(
                                 controller: controller.nameController,
                                 icon: Icons.person,
-                                keyboardType: TextInputType.name,
-                                label: "Full name", 
+                                keyboardType: TextInputType.name,                                label: "Nom Complet", 
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter your name';
+                                    return 'Veuillez saisir votre nom';
                                   }
                                   return null;
                                 },
-                                child: Text("Full name"),
+                                child: Text("Nom Complet"),
                               ),
                               const SizedBox(height: 12),
                               CustomFormField(
                                 controller: controller.emailController, 
                                 keyboardType: TextInputType.emailAddress, 
                                 label: "Email", 
-                                icon: Icons.email, 
-                                validator: (value){
+                                icon: Icons.email,                                validator: (value){
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter your email';
+                                    return 'Veuillez saisir votre email';
                                   }
                                   if (!value.contains('@')) {
-                                    return 'Please enter a valid email';
+                                    return 'Veuillez saisir un email valide';
                                   }
                                   return null;
                                 },
@@ -116,17 +112,15 @@ class CreateUser extends StatelessWidget {
                                 keyboardType: TextInputType.visiblePassword,
                                 
                                 obscureText: controller.isPasswordVisible.value,
-                                validator: (value){
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your password';
+                                validator: (value){                                  if (value == null || value.isEmpty) {
+                                    return 'Veuillez saisir votre mot de passe';
                                   }
                                   if (value.length < 6) {
-                                    return 'Password must be at least 6 characters';
+                                    return 'Le mot de passe doit contenir au moins 6 caractères';
                                   }
                                   return null;
                                 },
-                                decoration: InputDecoration(
-                                  labelText: "Password",
+                                decoration: InputDecoration(                                  labelText: "Mot de passe",
                                   icon: Icon(Icons.lock),
                                   suffixIcon: IconButton(
                                     icon: Icon(
@@ -145,17 +139,15 @@ class CreateUser extends StatelessWidget {
                                 controller: controller.confirmPasswordController,
                                 keyboardType: TextInputType.visiblePassword,
                                 obscureText: controller.isConfirmPasswordVisible.value,
-                                validator: (value){
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please confirm your password';
+                                validator: (value){                                  if (value == null || value.isEmpty) {
+                                    return 'Veuillez confirmer votre mot de passe';
                                   }
                                   if (value != controller.passwordController.text) {
-                                    return 'Passwords do not match';
+                                    return 'Les mots de passe ne correspondent pas';
                                   }
                                   return null;
                                 },
-                                decoration: InputDecoration(
-                                  labelText: "Confirm Password",
+                                decoration: InputDecoration(                                  labelText: "Confirmer le mot de passe",
                                   icon: Icon(Icons.lock),
                                   suffixIcon: IconButton(
                                     icon: Icon(
@@ -174,13 +166,12 @@ class CreateUser extends StatelessWidget {
                                 controller: controller.phoneController,
                                 keyboardType: TextInputType.phone,
                                 label: "Phone",
-                                icon: Icons.phone,
-                                validator: (value){
+                                icon: Icons.phone,                                validator: (value){
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter your phone number';
+                                    return 'Veuillez saisir votre numéro de téléphone';
                                   }
                                   if(!RegExp(r'^[2-4][0-9]{7}$').hasMatch(value)){
-                                    return 'Please enter a valid phone number';
+                                    return 'Veuillez saisir un numéro de téléphone valide';
                                   }
                                   return null;
                                 },
@@ -195,19 +186,18 @@ class CreateUser extends StatelessWidget {
                                     contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                                   ),
                                   child: DropdownButtonHideUnderline(
-                                    child: DropdownButtonFormField<String>(
-                                      value: controller.selectedRoleId.value.isEmpty 
-                                          ? null 
-                                          : controller.selectedRoleId.value,
-                                      isExpanded: true,
-                                      hint: const Text('Select Role'),
+                                    child: DropdownButtonFormField<String>(                      value: controller.selectedRoleId.value.isEmpty 
+                          ? null 
+                          : controller.selectedRoleId.value,
+                      isExpanded: true,
+                      hint: const Text('Sélectionner un rôle'),
                                       items: controller.roles.map((role) {
                                         return DropdownMenuItem<String>(
                                           value: role!.id.toString(),
                                           child: Text(role.name!),
                                         );
                                       }).toList(),
-                                      validator: (value) => value == null ? 'Please select a role' : null,
+                                      validator: (value) => value == null ? 'Veuillez sélectionner un rôle' : null,
                                       onChanged: (String? value) {
                                         if (value != null) {
                                           controller.selectedRoleId.value = value;
@@ -218,12 +208,11 @@ class CreateUser extends StatelessWidget {
                                 );
                               }),
                               const SizedBox(height: 20),
-                              SpecialButton(
-                                text: 'Create Employee',
-                                onPress: () async {
-                                  if (controller.formkey.currentState!.validate()) {
-                                    if (controller.selectedRoleId.value.isEmpty) {
-                                      Get.snackbar('Error', 'Please select a role');
+                              SpecialButton(                        text: 'Créer l\'employé',
+                        onPress: () async {
+                          if (controller.formkey.currentState!.validate()) {
+                            if (controller.selectedRoleId.value.isEmpty) {
+                              Get.snackbar('Erreur', 'Veuillez sélectionner un rôle');
                                       return;
                                     }
                                     
