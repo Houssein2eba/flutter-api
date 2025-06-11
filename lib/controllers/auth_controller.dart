@@ -1,4 +1,5 @@
 import 'package:demo/services/stored_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:demo/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +15,8 @@ class Authcontroller extends GetxController {
 
   final storage = Get.find<StorageService>();
   Future<void> login(String email, String password) async {
+            String? token=await  FirebaseMessaging.instance.getToken();
+    
     isLoading.value = true;
     final response = await http.post(
       Uri.parse('http://192.168.100.13:8000/api/login'),
@@ -24,6 +27,7 @@ class Authcontroller extends GetxController {
       body: jsonEncode(<String, String>{
         'credential': email,
         'password': password,
+        'token': token!,
       }),
     );
 

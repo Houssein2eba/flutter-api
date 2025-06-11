@@ -60,6 +60,14 @@ class DashboardScreen extends StatelessWidget {
                   },
                 ),
                 ListTile(
+                  leading: const Icon(Icons.supervisor_account),
+                  title: const Text('Roles et Permissions'),
+                  onTap: () {
+                    Get.toNamed(RouteClass.roles);
+                    // Navigate to profile
+                  },
+                ),
+                ListTile(
                   leading: const Icon(Icons.group),
                   title: const Text('Clients'),
                   onTap: () {

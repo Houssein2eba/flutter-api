@@ -1,5 +1,6 @@
 import 'package:demo/controllers/notification_controller.dart';
 import 'package:demo/models/noification.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -103,14 +104,19 @@ class NotificationPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.notifications_off, size: 60, color: Colors.grey),
-          const SizedBox(height: 16),          Text('Aucune notification', style: Get.textTheme.titleMedium),
+          const SizedBox(height: 16),     
+               Text('Aucune notification', style: Get.textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
             'Nous vous informerons lorsque quelque chose arrive',
             style: Get.textTheme.bodyMedium?.copyWith(color: Colors.grey),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(            onPressed: notificationController.fetchNotifications,
+          ElevatedButton(    
+            onPressed: (){
+              notificationController.fetchNotifications();
+            },
+            // notificationController.fetchNotifications,
             child: const Text('Actualiser'),
           ),
         ],

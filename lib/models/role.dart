@@ -1,8 +1,9 @@
 class Role {
   final String? id;
   final String? name;
+  final int? usersCount;
 
-  Role({required this.id, required this.name});
+  Role({required this.id, required this.name, this.usersCount = 0});
 
 Map<String, dynamic> toJson() => {
     'id': id,
@@ -14,6 +15,7 @@ Map<String, dynamic> toJson() => {
     return Role(
       id: json['id'],
       name: json['name'],
+      usersCount: json['users_count'] ?? 0,
     );
   }
 }

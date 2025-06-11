@@ -1,6 +1,6 @@
-
 import 'package:demo/services/ask_permissions.dart';
 import 'package:demo/services/initial_binding.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/routes/web.dart';
 import 'package:get/get.dart';
@@ -12,7 +12,9 @@ void main() async {
   // Initialize and register the StorageService
   await Get.putAsync(() => AskPermissions().askStoragePermission());
   await Get.putAsync(() => StorageService().init());
-  
+  await Firebase.initializeApp(
+
+  );
 
   runApp(MyApp());
 }
@@ -108,7 +110,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      initialBinding:InitialBinding() ,
+      initialBinding: InitialBinding(),
       initialRoute: RouteClass.getDashBoardRoute(),
       getPages: RouteClass.getPages(),
     );
