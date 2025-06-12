@@ -13,7 +13,7 @@ class UserPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('Users'),
+          title: const Text('Employées'),
 
         ),
         body: Obx(() {
