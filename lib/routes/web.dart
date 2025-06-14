@@ -8,6 +8,7 @@ import 'package:demo/views/clients/show.dart';
 import 'package:demo/views/dashboard.dart';
 import 'package:demo/views/homepage.dart';
 import 'package:demo/views/notifications/index.dart';
+import 'package:demo/views/role/create.dart';
 import 'package:demo/views/role/index.dart';
 import 'package:demo/views/stock/index.dart';
 import 'package:demo/views/users/create.dart';
@@ -28,6 +29,7 @@ class RouteClass {
   static String dashBoard = "/dashboard";
   static String stocks = "/stocks";
   static String roles="/roles";
+  static  String crateRole= "/create-role";
 
 
   static String getStocksRoute() => stocks;
@@ -112,6 +114,7 @@ class RouteClass {
         middlewares: [SanctumAuthMiddleware()],
 
       ),
+      GetPage(name: crateRole, page: () => CreateRoleView()),
 
     ];
   }

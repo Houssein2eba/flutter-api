@@ -1,7 +1,6 @@
 import 'package:demo/controllers/stock/stocks_controller.dart';
 import 'package:demo/core/functions/handle_validation.dart';
 import 'package:demo/models/stock.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +14,14 @@ class StockCard extends StatefulWidget {
 class _StockCardState extends State<StockCard> {
   final StocksController controller = Get.find();
   late final ScrollController scrollController;
-  
+
+  // Custom color palette matching login screen
+  final Color primaryColor = const Color(0xFF6C63FF);
+  final Color secondaryColor = const Color(0xFF4A40BF);
+  final Color accentColor = const Color(0xFFF8B400);
+  final Color backgroundColor = const Color(0xFFF9F9F9);
+  final Color textColor = const Color(0xFF333333);
+  final Color lightTextColor = const Color(0xFF777777);
 
   @override
   void initState() {
@@ -51,17 +57,24 @@ class _StockCardState extends State<StockCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-        
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Stock Overview'),
+        title: Text(
+          'Vue d\'ensemble des Stocks',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
+        backgroundColor: primaryColor,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Obx(() {
-        // Show full screen loading for initial load
         if (controller.isLoading.value && controller.stocks.isEmpty) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(color: primaryColor),
           );
         }
 
@@ -72,6 +85,7 @@ class _StockCardState extends State<StockCard> {
                 onRefresh: () async {
                   await controller.loadStocks();
                 },
+                color: primaryColor,
                 child: GridView.builder(
                   controller: scrollController,
                   padding: const EdgeInsets.all(16),
@@ -83,12 +97,11 @@ class _StockCardState extends State<StockCard> {
                   ),
                   itemCount: controller.stocks.length + (controller.hasMore.value ? 1 : 0),
                   itemBuilder: (context, index) {
-                    // Show loading indicator at the bottom when loading more
                     if (index >= controller.stocks.length) {
-                      return const Center(
+                      return Center(
                         child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: CircularProgressIndicator(),
+                          padding: const EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(color: primaryColor),
                         ),
                       );
                     }
@@ -107,7 +120,7 @@ class _StockCardState extends State<StockCard> {
 
   Widget _buildStockCard(Stock stock) {
     return Card(
-      elevation: 2,
+      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
@@ -135,13 +148,13 @@ class _StockCardState extends State<StockCard> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.blue.shade100,
+                              color: primaryColor.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.inventory,
                               size: 28,
-                              color: Colors.blue,
+                              color: primaryColor,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -149,17 +162,18 @@ class _StockCardState extends State<StockCard> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                stock.name ?? 'No Name',
-                                style: const TextStyle(
+                                stock.name ?? 'Non spécifié',
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
+                                  color: textColor,
                                 ),
                               ),
                               Text(
-                                stock.location ?? 'No Location',
+                                stock.location ?? 'Localisation inconnue',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Colors.grey.shade600,
+                                  color: lightTextColor,
                                 ),
                               ),
                             ],
@@ -178,11 +192,11 @@ class _StockCardState extends State<StockCard> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          stock.status ?? 'Unknown',
+                          stock.status ?? 'Inconnu',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: stock.status == 'Active'
+                            color: stock.status == 'good'
                                 ? Colors.green.shade800
                                 : Colors.red.shade800,
                           ),
@@ -200,19 +214,19 @@ class _StockCardState extends State<StockCard> {
                     mainAxisSpacing: 8,
                     children: [
                       _buildStatItem(
-                        'Product Types',
+                        'Types de Produits',
                         '${stock.productTypes ?? 0}',
                       ),
                       _buildStatItem(
-                        'Products Count',
+                        'Nombre de Produits',
                         '${stock.totalProducts ?? 0}',
                       ),
                       _buildStatItem(
-                        'Total Value',
+                        'Valeur Totale',
                         '\$${(stock.totalValue ?? 0).toStringAsFixed(2)}',
                       ),
                       _buildStatItem(
-                        'Last Updated',
+                        'Dernière Mise à Jour',
                         UsefulFunctions.formatDate(stock.updatedAt),
                       ),
                     ],
@@ -220,39 +234,7 @@ class _StockCardState extends State<StockCard> {
                 ],
               ),
             ),
-            const Spacer(),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'View Details',
-                    style: TextStyle(
-                      color: Colors.blue.shade600,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    Icons.chevron_right,
-                    size: 20,
-                    color: Colors.blue.shade600,
-                  ),
-                ],
-              ),
-            ),
+          
           ],
         ),
       ),
@@ -267,15 +249,16 @@ class _StockCardState extends State<StockCard> {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.grey.shade600,
+            color: lightTextColor,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: textColor,
           ),
         ),
       ],

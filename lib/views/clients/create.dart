@@ -1,4 +1,5 @@
 import 'package:demo/controllers/client/client_controller.dart';
+import 'package:demo/core/constant/colors_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:demo/wigets/special_button.dart';
@@ -11,146 +12,171 @@ class CreateClient extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Clientscontroller clientsController = Get.find();
 
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.grey[50],
+        backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
           title: Text(
-            'Create Client',
+            'Nouveau Client',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
+              fontSize: 20,
             ),
           ),
           centerTitle: true,
-          backgroundColor: Colors.blue,
+          backgroundColor: AppColors.primaryColor,
           elevation: 0,
-          iconTheme: IconThemeData(color: Colors.blue[800]),
+          iconTheme: IconThemeData(color: Colors.white),
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 40),
-                  // Header with icon
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.blue[50],
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.person_add, size: 40, color: Colors.blue[800]),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 40),
+                // Header with icon
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                    shape: BoxShape.circle,
                   ),
-                  const SizedBox(height: 10),
-                  const SizedBox.shrink(),
-                  const SizedBox(height: 24),
-                  // Title
-                  Text(                    'Ajouter un Nouveau Client',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
-                    ),
-                    textAlign: TextAlign.center,
+                  child: Icon(
+                    Icons.person_add,
+                    size: 40,
+                    color: AppColors.primaryColor,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Remplissez les détails du client',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-                    textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                // Title
+                Text(
+                  'Ajouter un Nouveau Client',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textColor,
                   ),
-                  const SizedBox(height: 40),
-                  // Form
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: nameController,
-                          decoration: InputDecoration(                            labelText: 'Nom Complet',
-                            labelStyle: TextStyle(color: Colors.grey[600]),
-                            prefixIcon: Icon(
-                              Icons.person_outline,
-                              color: Colors.grey[600],
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Remplissez les détails du client',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.lightTextColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 40),
+                // Form
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Nom Complet',
+                          labelStyle: TextStyle(color: AppColors.lightTextColor),
+                          prefixIcon: Icon(
+                            Icons.person_outline,
+                            color: AppColors.lightTextColor,
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 20,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppColors.primaryColor,
+                              width: 1.5,
                             ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: Theme.of(context).inputDecorationTheme.border,
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 20,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: Colors.blue[800]!,
-                                width: 2,
-                              ),
-                            ),
-                          ),                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Veuillez saisir le nom du client';
-                            }
-                            return null;
-                          },
+                          ),
                         ),
-                        const SizedBox(height: 20),
-                        TextFormField(
-                          controller: phoneController,
-                          keyboardType: TextInputType.phone,
-                          decoration: InputDecoration(                            labelText: 'Numéro de Téléphone',
-                            labelStyle: TextStyle(color: Colors.grey[600]),
-                            prefixIcon: Icon(
-                              Icons.phone_outlined,
-                              color: Colors.grey[600],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Veuillez saisir le nom du client';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: phoneController,
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                          labelText: 'Numéro de Téléphone',
+                          labelStyle: TextStyle(color: AppColors.lightTextColor),
+                          prefixIcon: Icon(
+                            Icons.phone_outlined,
+                            color: AppColors.lightTextColor,
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 20,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppColors.primaryColor,
+                              width: 1.5,
                             ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: Theme.of(context).inputDecorationTheme.border,
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 20,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: Theme.of(context).inputDecorationTheme.border!.borderSide,
-                            ),
-                            hintText: 'e.g. 21234567',
-                          ),                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Veuillez saisir le numéro de téléphone';
-                            }  
-                            if (!RegExp(r'^[2-4][0-9]{7}$').hasMatch(value)) {
-                              return 'Veuillez saisir un numéro de téléphone valide';
-                            }
-                            return null;
-                          },
+                          ),
+                          hintText: 'ex: 21234567',
+                          hintStyle: TextStyle(color: AppColors.lightTextColor.withOpacity(0.5)),
                         ),
-                        const SizedBox(height: 40),                        // Create button
-                        SpecialButton(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Veuillez saisir le numéro de téléphone';
+                          }  
+                          if (!RegExp(r'^[2-4][0-9]{7}$').hasMatch(value)) {
+                            return 'Numéro de téléphone invalide';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 40),
+                      // Create button
+                      SizedBox(
+                        width: double.infinity,
+                        child: SpecialButton(
                           text: 'Créer Client',
                           onPress: () {
-                            // if (_formKey.currentState!.validate()) {
-                            //   clientsController.createClient(
-                            //     name: nameController.text,
-                            //     phone: phoneController.text,
-                            //   );
-                            // }
+                            if (_formKey.currentState!.validate()) {
+                              clientsController.createClient(
+                                name: nameController.text,
+                                phone: phoneController.text,
+                              );
+                            }
                           },
-                          color: Colors.blue,
+                          color: AppColors.primaryColor,
                           textColor: Colors.white,
+                        
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

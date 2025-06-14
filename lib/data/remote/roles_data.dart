@@ -20,6 +20,33 @@ class RolesData {
     return response.fold((l) => l, (r) => r);
   }
 
+  getPermisssions() async {
+    String? token = storage.getToken();
+    var response = await crud.getData(AppLinks.permissions, {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    });
+    
+
+    return response.fold((l) => l, (r) => r);
+  }
+
+  createRole({required String role,required List<String> perissions}) async {
+    String? token = storage.getToken();
+    var response = await crud.postJsonData(AppLinks.permissions, 
+    {
+      'role':role,
+      'permissions':perissions
+    }
+    , {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    });
+    return response.fold((l) => l, (r) => r);
+  }
+
   deleteRole(String id) async {
     String? token = storage.getToken();
     print(id);

@@ -8,15 +8,23 @@ import 'package:intl/intl.dart';
 class NotificationPage extends StatelessWidget {
   final NotificationController notificationController = Get.find();
 
+  // Custom color palette matching login screen
+  final Color primaryColor = const Color(0xFF6C63FF);
+  final Color secondaryColor = const Color(0xFF4A40BF);
+  final Color accentColor = const Color(0xFFF8B400);
+  final Color backgroundColor = const Color(0xFFF9F9F9);
+  final Color textColor = const Color(0xFF333333);
+  final Color lightTextColor = const Color(0xFF777777);
+
   NotificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: backgroundColor,
         appBar: _buildAppBar(),
         body: _buildNotificationList(),
-        
       ),
     );
   }
@@ -26,14 +34,15 @@ class NotificationPage extends StatelessWidget {
       title: Obx(
         () => Text(
           'Notifications ${notificationController.unreadCount.value > 0 ? '(${notificationController.unreadCount.value})' : ''}',
-        style: TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-          )
+          ),
         ),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: primaryColor,
       elevation: 0,
+      iconTheme: IconThemeData(color: Colors.white),
       actions: [
         Obx(
           () => notificationController.unreadCount.value > 0
@@ -51,14 +60,15 @@ class NotificationPage extends StatelessWidget {
   Widget _buildMarkAllAsReadIcon() {
     return Stack(
       children: [
-        const Icon(Icons.mark_as_unread),
+        const Icon(Icons.mark_as_unread, color: Colors.white),
         Positioned(
           right: 0,
           child: Container(
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               color: Colors.red,
-              borderRadius: BorderRadius.circular(10)),
+              borderRadius: BorderRadius.circular(10),
+            ),
             constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
             child: Obx(
               () => Text(
@@ -69,16 +79,17 @@ class NotificationPage extends StatelessWidget {
             ),
           ),
         ),
-    ],
+      ],
     );
   }
 
   Widget _buildNotificationList() {
     return RefreshIndicator(
       onRefresh: notificationController.fetchNotifications,
+      color: primaryColor,
       child: Obx(() {
         if (notificationController.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator(color: primaryColor));
         }
 
         if (notificationController.notifications.isEmpty) {
@@ -88,7 +99,7 @@ class NotificationPage extends StatelessWidget {
         return ListView.separated(
           padding: const EdgeInsets.symmetric(vertical: 8),
           itemCount: notificationController.notifications.length,
-          separatorBuilder: (context, index) => const Divider(height: 1),
+          separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey[200]),
           itemBuilder: (context, index) {
             final notification = notificationController.notifications[index];
             return _buildNotificationItem(notification);
@@ -103,20 +114,31 @@ class NotificationPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.notifications_off, size: 60, color: Colors.grey),
-          const SizedBox(height: 16),     
-               Text('Aucune notification', style: Get.textTheme.titleMedium),
+          Icon(Icons.notifications_off, size: 60, color: lightTextColor),
+          const SizedBox(height: 16),
+          Text(
+            'Aucune notification',
+            style: TextStyle(
+              fontSize: 18,
+              color: textColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 8),
           Text(
             'Nous vous informerons lorsque quelque chose arrive',
-            style: Get.textTheme.bodyMedium?.copyWith(color: Colors.grey),
+            style: TextStyle(color: lightTextColor),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(    
-            onPressed: (){
-              notificationController.fetchNotifications();
-            },
-            // notificationController.fetchNotifications,
+          ElevatedButton(
+            onPressed: notificationController.fetchNotifications,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
             child: const Text('Actualiser'),
           ),
         ],
@@ -125,7 +147,7 @@ class NotificationPage extends StatelessWidget {
   }
 
   Widget _buildNotificationItem(Notificatione notification) {
-    final dateFormat = DateFormat('MMM dd, yyyy - hh:mm a');
+    final dateFormat = DateFormat('dd/MM/yyyy - HH:mm');
     final createdAt = notification.createdAt != null 
         ? DateTime.tryParse(notification.createdAt!) 
         : null;
@@ -139,8 +161,8 @@ class NotificationPage extends StatelessWidget {
         onTap: () => _handleNotificationTap(notification),
         child: Container(
           color: notification.isRead 
-              ? Colors.transparent 
-              : Colors.blue.shade50.withOpacity(0.5),
+              ? Colors.white 
+              : primaryColor.withOpacity(0.1),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,8 +172,10 @@ class NotificationPage extends StatelessWidget {
                   _buildReadStatusIcon(notification),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(                      notification.message ?? 'Pas de message',
+                    child: Text(
+                      notification.message ?? 'Pas de message',
                       style: TextStyle(
+                        color: textColor,
                         fontWeight: notification.isRead 
                             ? FontWeight.normal 
                             : FontWeight.bold,
@@ -172,7 +196,7 @@ class NotificationPage extends StatelessWidget {
 
   Widget _buildDismissBackground() {
     return Container(
-      color: Colors.red,
+      color: Colors.red[400],
       alignment: Alignment.centerRight,
       padding: const EdgeInsets.only(right: 20),
       child: const Icon(Icons.delete, color: Colors.white),
@@ -180,22 +204,28 @@ class NotificationPage extends StatelessWidget {
   }
 
   Future<void> _handleDismiss(Notificatione notification) async {
-    final confirmed = await Get.defaultDialog<bool>(      title: 'Supprimer la Notification',
+    final confirmed = await Get.defaultDialog<bool>(
+      title: 'Supprimer la Notification',
+      titleStyle: TextStyle(color: textColor, fontWeight: FontWeight.bold),
       middleText: 'Êtes-vous sûr de vouloir supprimer cette notification ?',
+      middleTextStyle: TextStyle(color: lightTextColor),
       textConfirm: 'Supprimer',
       textCancel: 'Annuler',
       confirmTextColor: Colors.white,
-      buttonColor: Colors.red,
-      cancelTextColor: Colors.blue,
+      buttonColor: Colors.red[400],
+      cancelTextColor: primaryColor,
       onConfirm: () => Get.back(result: true),
       onCancel: () => Get.back(result: false),
     );
 
     if (confirmed == true) {
-      await notificationController.deleteNotification(notification.id!);      Get.snackbar(
+      await notificationController.deleteNotification(notification.id!);
+      Get.snackbar(
         'Supprimé',
         'La notification a été supprimée',
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
       );
     }
   }
@@ -210,7 +240,7 @@ class NotificationPage extends StatelessWidget {
   Widget _buildReadStatusIcon(Notificatione notification) {
     return Icon(
       notification.isRead ? Icons.check_circle : Icons.info,
-      color: notification.isRead ? Colors.green : Colors.orange,
+      color: notification.isRead ? Colors.green : primaryColor,
       size: 20,
     );
   }
@@ -219,8 +249,8 @@ class NotificationPage extends StatelessWidget {
     return Container(
       width: 8,
       height: 8,
-      decoration: const BoxDecoration(
-        color: Colors.blue,
+      decoration: BoxDecoration(
+        color: primaryColor,
         shape: BoxShape.circle,
       ),
     );
@@ -229,9 +259,7 @@ class NotificationPage extends StatelessWidget {
   Widget _buildTimestamp(DateTime createdAt, DateFormat dateFormat) {
     return Text(
       dateFormat.format(createdAt),
-      style: Get.textTheme.bodySmall?.copyWith(color: Colors.grey),
+      style: TextStyle(color: lightTextColor, fontSize: 12),
     );
   }
-
-  
 }

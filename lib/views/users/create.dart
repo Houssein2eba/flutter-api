@@ -1,5 +1,4 @@
-
-
+import 'package:demo/core/constant/colors_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:demo/controllers/user/user_controller.dart';
@@ -8,25 +7,24 @@ class CreateUser extends StatelessWidget {
   CreateUser({super.key});
   final UserController controller = Get.find();
 
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-
     return Scaffold(
-      backgroundColor: colors.surface,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         title: Text(
           'Nouvel Employé',
-          style: theme.textTheme.titleLarge?.copyWith(
-            color: colors.onPrimary,
+          style: TextStyle(
+            color: AppColors.backgroundColor,
             fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
         centerTitle: true,
-        backgroundColor: colors.primary,
+        backgroundColor: AppColors.primaryColor,
         elevation: 0,
-        iconTheme: IconThemeData(color: colors.onPrimary),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -35,11 +33,11 @@ class CreateUser extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _entete(theme, colors),
+              _buildHeader(),
               const SizedBox(height: 32),
-              _champsFormulaire(theme, colors),
+              _buildFormFields(),
               const SizedBox(height: 24),
-              _boutonValider(theme, colors),
+              _buildSubmitButton(),
             ],
           ),
         ),
@@ -47,7 +45,7 @@ class CreateUser extends StatelessWidget {
     );
   }
 
-  Widget _entete(ThemeData theme, ColorScheme colors) {
+  Widget _buildHeader() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -55,44 +53,54 @@ class CreateUser extends StatelessWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: colors.primary.withOpacity(0.1),
+            color: AppColors.primaryColor.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
             Icons.person_add_alt_1,
             size: 32,
-            color: colors.primary,
+            color: AppColors.primaryColor,
           ),
         ),
         const SizedBox(height: 16),
         Text(
           'Ajouter un nouvel employé',
-          style: theme.textTheme.headlineSmall?.copyWith(
+          style: TextStyle(
+            fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: colors.onSurface,
+            color: AppColors.textColor,
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          'Veuillez remplir les informations de l’employé',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: colors.onSurface.withOpacity(0.6),
+          "Veuillez remplir les informations de l'employé",
+          style: TextStyle(
+            fontSize: 14,
+            color: AppColors.lightTextColor,
           ),
         ),
       ],
     );
   }
 
-  Widget _champsFormulaire(ThemeData theme, ColorScheme colors) {
+  Widget _buildFormFields() {
     return Column(
       children: [
         TextFormField(
           controller: controller.nameController,
           decoration: InputDecoration(
             labelText: 'Nom complet',
-            prefixIcon: Icon(Icons.person_outline, color: colors.onSurface.withOpacity(0.6)),
+            labelStyle: TextStyle(color: AppColors.lightTextColor),
+            prefixIcon: Icon(Icons.person_outline, color: AppColors.lightTextColor),
+            filled: true,
+            fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
             ),
           ),
           validator: (value) => value?.isEmpty ?? true ? 'Veuillez entrer le nom complet' : null,
@@ -103,13 +111,21 @@ class CreateUser extends StatelessWidget {
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             labelText: 'Adresse e-mail',
-            prefixIcon: Icon(Icons.email_outlined, color: colors.onSurface.withOpacity(0.6)),
+            labelStyle: TextStyle(color: AppColors.lightTextColor),
+            prefixIcon: Icon(Icons.email_outlined, color: AppColors.lightTextColor),
+            filled: true,
+            fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
             ),
           ),
           validator: (value) {
-            if (value?.isEmpty ?? true) return 'Veuillez entrer l’adresse e-mail';
+            if (value?.isEmpty ?? true) return "Veuillez entrer l'adresse e-mail";
             if (!value!.contains('@')) return 'Veuillez entrer une adresse e-mail valide';
             return null;
           },
@@ -120,16 +136,26 @@ class CreateUser extends StatelessWidget {
               obscureText: !controller.isPasswordVisible.value,
               decoration: InputDecoration(
                 labelText: 'Mot de passe',
-                prefixIcon: Icon(Icons.lock_outline, color: colors.onSurface.withOpacity(0.6)),
+                labelStyle: TextStyle(color: AppColors.lightTextColor),
+                prefixIcon: Icon(Icons.lock_outline, color: AppColors.lightTextColor),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    controller.isPasswordVisible.value ? Icons.visibility : Icons.visibility_off,
-                    color: colors.onSurface.withOpacity(0.6),
+                    controller.isPasswordVisible.value 
+                        ? Icons.visibility 
+                        : Icons.visibility_off,
+                    color: AppColors.lightTextColor,
                   ),
                   onPressed: () => controller.isPasswordVisible.toggle(),
                 ),
+                filled: true,
+                fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
                 ),
               ),
               validator: (value) {
@@ -144,16 +170,26 @@ class CreateUser extends StatelessWidget {
               obscureText: !controller.isConfirmPasswordVisible.value,
               decoration: InputDecoration(
                 labelText: 'Confirmer le mot de passe',
-                prefixIcon: Icon(Icons.lock_outline, color: colors.onSurface.withOpacity(0.6)),
+                labelStyle: TextStyle(color: AppColors.lightTextColor),
+                prefixIcon: Icon(Icons.lock_outline, color: AppColors.lightTextColor),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    controller.isConfirmPasswordVisible.value ? Icons.visibility : Icons.visibility_off,
-                    color: colors.onSurface.withOpacity(0.6),
+                    controller.isConfirmPasswordVisible.value 
+                        ? Icons.visibility 
+                        : Icons.visibility_off,
+                    color: AppColors.lightTextColor,
                   ),
                   onPressed: () => controller.isConfirmPasswordVisible.toggle(),
                 ),
+                filled: true,
+                fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
                 ),
               ),
               validator: (value) {
@@ -168,15 +204,23 @@ class CreateUser extends StatelessWidget {
           keyboardType: TextInputType.phone,
           decoration: InputDecoration(
             labelText: 'Numéro de téléphone',
-            prefixIcon: Icon(Icons.phone_outlined, color: colors.onSurface.withOpacity(0.6)),
+            labelStyle: TextStyle(color: AppColors.lightTextColor),
+            prefixIcon: Icon(Icons.phone_outlined, color: AppColors.lightTextColor),
+            filled: true,
+            fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
             ),
           ),
           validator: (value) {
             if (value?.isEmpty ?? true) return 'Veuillez entrer le numéro de téléphone';
             if (!RegExp(r'^[2-4][0-9]{7}$').hasMatch(value!)) {
-              return 'Veuillez entrer un numéro valide ';
+              return 'Veuillez entrer un numéro valide';
             }
             return null;
           },
@@ -186,8 +230,16 @@ class CreateUser extends StatelessWidget {
               value: controller.selectedRoleId.value.isEmpty ? null : controller.selectedRoleId.value,
               decoration: InputDecoration(
                 labelText: 'Rôle',
+                labelStyle: TextStyle(color: AppColors.lightTextColor),
+                filled: true,
+                fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
                 ),
               ),
               items: controller.roles.map((role) {
@@ -203,13 +255,20 @@ class CreateUser extends StatelessWidget {
                 }
               },
               isExpanded: true,
-              hint: const Text('Sélectionnez un rôle'),
-            )),
+              hint: Text(
+                'Sélectionnez un rôle',
+                style: TextStyle(color: AppColors.lightTextColor),
+              ),
+              dropdownColor: Colors.white,
+              style: TextStyle(color: AppColors.textColor),
+            )
+            ),
+            
       ],
     );
   }
 
-  Widget _boutonValider(ThemeData theme, ColorScheme colors) {
+  Widget _buildSubmitButton() {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -220,8 +279,8 @@ class CreateUser extends StatelessWidget {
                 'Erreur',
                 'Veuillez sélectionner un rôle',
                 snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: colors.error,
-                colorText: colors.onError,
+                backgroundColor: Colors.red[400],
+                colorText: Colors.white,
               );
               return;
             }
@@ -234,16 +293,18 @@ class CreateUser extends StatelessWidget {
           }
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: colors.primary,
+          backgroundColor: AppColors.primaryColor,
+          foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
+          elevation: 0,
         ),
-        child: Text(
-          'Créer l’employé',
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: colors.onPrimary,
+        child: const Text(
+          "Créer l'employé",
+          style: TextStyle(
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -1,46 +1,48 @@
+import 'package:demo/core/constant/colors_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:demo/controllers/client/update_client_controller.dart';
 
-
 class EditClientScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   EditClientScreen({super.key});
+
+
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     final controller = Get.put(UpdateClientController());
 
     return Scaffold(
+      backgroundColor:  AppColors.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'Edit Client',
-          style: theme.textTheme.titleLarge?.copyWith(
-            color: colorScheme.onPrimary,
+          'Modifier Client',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
         centerTitle: true,
-        backgroundColor: colorScheme.primary,
-        iconTheme: IconThemeData(color: colorScheme.onPrimary),
+        backgroundColor: AppColors.primaryColor,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildHeader(context),
+              _buildHeader(),
               const SizedBox(height: 32),
-              _buildNameField(theme, colorScheme,controller),
+              _buildNameField(controller),
               const SizedBox(height: 16),
-              _buildPhoneField(theme, colorScheme,controller),
+              _buildPhoneField(controller),
               const SizedBox(height: 32),
-              _buildUpdateButton(theme, colorScheme,controller),
+              _buildUpdateButton(controller),
             ],
           ),
         ),
@@ -48,51 +50,51 @@ class EditClientScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
+  Widget _buildHeader() {
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: colorScheme.primary.withOpacity(0.1),
+            color: AppColors.primaryColor.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
             Icons.person_outline,
             size: 40,
-            color: colorScheme.primary,
+            color: AppColors.primaryColor,
           ),
         ),
         const SizedBox(height: 16),
         Text(
-          'Edit Client Details',
-          style: theme.textTheme.titleLarge?.copyWith(
-            color: colorScheme.onSurface,
+          'Modifier les détails du client',
+          style: TextStyle(
+            fontSize: 22,
             fontWeight: FontWeight.bold,
+            color: AppColors.textColor,
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          'Update the client information',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurface.withOpacity(0.6),
+          'Mettre à jour les informations du client',
+          style: TextStyle(
+            fontSize: 14,
+            color: AppColors.lightTextColor,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildNameField(ThemeData theme, ColorScheme colorScheme,UpdateClientController controller) {
+  Widget _buildNameField(UpdateClientController controller) {
     return TextFormField(
       controller: controller.nameController,
       decoration: InputDecoration(
-        labelText: 'Full Name',
-        prefixIcon: Icon(Icons.person_outline, color: colorScheme.onSurface.withOpacity(0.6)),
+        labelText: 'Nom Complet',
+        labelStyle: TextStyle(color: AppColors.lightTextColor),
+        prefixIcon: Icon(Icons.person_outline, color: AppColors.lightTextColor),
         filled: true,
-        fillColor: colorScheme.surfaceVariant.withOpacity(0.4),
+        fillColor: Colors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -100,27 +102,26 @@ class EditClientScreen extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: colorScheme.primary,
-            width: 2,
+            color: AppColors.primaryColor,
+            width: 1.5,
           ),
         ),
       ),
-      style: theme.textTheme.bodyLarge?.copyWith(
-        color: colorScheme.onSurface,
-      ),
-      validator: (value) => value?.isEmpty ?? true ? 'Please enter a name' : null,
+      style: TextStyle(color: AppColors.textColor),
+      validator: (value) => value?.isEmpty ?? true ? 'Veuillez entrer un nom' : null,
     );
   }
 
-  Widget _buildPhoneField(ThemeData theme, ColorScheme colorScheme,UpdateClientController controller) {
+  Widget _buildPhoneField(UpdateClientController controller) {
     return TextFormField(
       controller: controller.phoneController,
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
-        labelText: 'Phone Number',
-        prefixIcon: Icon(Icons.phone_outlined, color: colorScheme.onSurface.withOpacity(0.6)),
+        labelText: 'Numéro de Téléphone',
+        labelStyle: TextStyle(color: AppColors.lightTextColor),
+        prefixIcon: Icon(Icons.phone_outlined, color: AppColors.lightTextColor),
         filled: true,
-        fillColor: colorScheme.surfaceVariant.withOpacity(0.4),
+        fillColor: Colors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -128,20 +129,25 @@ class EditClientScreen extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: colorScheme.primary,
-            width: 2,
+            color: AppColors.primaryColor,
+            width: 1.5,
           ),
         ),
-        hintText: 'e.g. 1234567890',
+        hintText: 'ex: 21234567',
+        hintStyle: TextStyle(color: AppColors.lightTextColor.withOpacity(0.5)),
       ),
-      style: theme.textTheme.bodyLarge?.copyWith(
-        color: colorScheme.onSurface,
-      ),
-      validator: (value) => value?.isEmpty ?? true ? 'Please enter a phone number' : null,
+      style: TextStyle(color: AppColors.textColor),
+      validator: (value) {
+        if (value?.isEmpty ?? true) return 'Veuillez entrer un numéro de téléphone';
+        if (!RegExp(r'^[2-4][0-9]{7}$').hasMatch(value!)) {
+          return 'Numéro de téléphone invalide';
+        }
+        return null;
+      },
     );
   }
 
-  Widget _buildUpdateButton(ThemeData theme, ColorScheme colorScheme,UpdateClientController controller) {
+  Widget _buildUpdateButton(UpdateClientController controller) {
     return ElevatedButton(
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
@@ -149,16 +155,18 @@ class EditClientScreen extends StatelessWidget {
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: colorScheme.primary,
+        backgroundColor: AppColors.primaryColor,
+        foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
+        elevation: 0,
       ),
-      child: Text(
-        'Update Client',
-        style: theme.textTheme.labelLarge?.copyWith(
-          color: colorScheme.onPrimary,
+      child: const Text(
+        'Mettre à jour',
+        style: TextStyle(
+          fontSize: 16,
           fontWeight: FontWeight.bold,
         ),
       ),

@@ -40,6 +40,7 @@ class Crud {
       if (await checkConnection()) {
         var response = await http.get(Uri.parse(url), headers: header);
         print(response.statusCode);
+        print(response.body);
         if (response.statusCode == 200 || response.statusCode == 201) {
           Map reponseBody = json.decode(response.body);
           return Right(reponseBody);
@@ -61,7 +62,7 @@ class Crud {
     try {
       if (await checkConnection()) {
         var response = await http.delete(Uri.parse(url), headers: header);
-        
+
         if (response.statusCode == 200 || response.statusCode == 201) {
           Map reponseBody = json.decode(response.body);
           return Right(reponseBody);
@@ -103,7 +104,7 @@ class Crud {
     }
   }
 
- Future<Either<StatusRequest, Map>> putData(
+  Future<Either<StatusRequest, Map>> putData(
     String url,
     Map data,
     Map<String, String> header,

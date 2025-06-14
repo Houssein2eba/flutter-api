@@ -47,6 +47,8 @@ class RolesController extends GetxController {
     update();
   }
 
+
+
   Future<void> deleteRole(String id) async {
     try {
       statusRequest = StatusRequest.loading;

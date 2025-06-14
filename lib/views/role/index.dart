@@ -1,5 +1,6 @@
 import 'package:demo/controllers/role/roles_controller.dart';
 import 'package:demo/core/class/handeling_data_view.dart';
+import 'package:demo/routes/web.dart';
 import 'package:demo/wigets/role/build_statd_card.dart';
 import 'package:demo/wigets/role/roles_table.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,8 @@ class RolesScreen extends StatelessWidget {
         }
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => null,
-        tooltip: 'Add New Role',
+        onPressed: () =>Get.toNamed(RouteClass.crateRole),
+        tooltip: 'Ajouter un role',
         child: Icon(Icons.add),
       ),
     );

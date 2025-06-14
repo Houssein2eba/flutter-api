@@ -23,6 +23,7 @@ class SpecialButton extends StatelessWidget{
                         elevation: 2,
                       ),
       onPressed: onPress,
+
       child: Text(text, style: TextStyle(color: textColor),),
     );
   }
