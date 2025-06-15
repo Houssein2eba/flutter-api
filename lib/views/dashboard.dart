@@ -12,7 +12,6 @@ class DashboardScreen extends StatelessWidget {
   final StorageService storage = Get.find();
   final Authcontroller authController = Get.find();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +63,7 @@ class DashboardScreen extends StatelessWidget {
                     onTap: () => Get.toNamed(RouteClass.getUsersRoute()),
                   ),
                   _buildDrawerItem(
-                    icon: Icons.supervisor_account,
+                    icon: Icons.key,
                     title: 'Roles et Permissions',
                     onTap: () => Get.toNamed(RouteClass.roles),
                   ),
@@ -78,15 +77,25 @@ class DashboardScreen extends StatelessWidget {
                     title: 'Stocks',
                     onTap: () => Get.toNamed(RouteClass.getStocksRoute()),
                   ),
-                  const Divider(
-                    color: Colors.grey,
-                    thickness: 0.5,
-                    height: 20,
-                  ),
+                  const Divider(color: Colors.grey, thickness: 0.5, height: 20),
                   _buildDrawerItem(
                     icon: Icons.help,
                     title: 'Aide & Retour',
-                    onTap: () => Get.toNamed(RouteClass.stockMovements),
+                    onTap: () {
+                      Get.dialog(
+                        AlertDialog(
+                          title: Text('Aide & Retour'),
+                          content: Text('''Cette application est conçue pour vous aider à gérer vos stocks. Si vous avez des questions, des commentaires ou des suggestions, n'hésitezpas à nous contacter au 30684078.'''),
+
+                          actions: [
+                            TextButton(
+                              onPressed: () => Get.back(),
+                              child: Text('Fermer'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -171,13 +180,15 @@ class DashboardScreen extends StatelessWidget {
                       icon: Icons.inventory_2_rounded,
                       color: AppColors.primaryColor,
                       label: "Produits Totaux",
-                      value: controller.dashboard.value!.totalProducts.toString(),
+                      value:
+                          controller.dashboard.value!.totalProducts.toString(),
                     ),
                     _StatItem(
                       icon: Icons.warning_amber_rounded,
                       color: AppColors.accentColor,
                       label: "Produits Faibles",
-                      value: controller.dashboard.value!.lowStockCount.toString(),
+                      value:
+                          controller.dashboard.value!.lowStockCount.toString(),
                     ),
                     _StatItem(
                       icon: Icons.inventory_sharp,
@@ -189,7 +200,9 @@ class DashboardScreen extends StatelessWidget {
                       icon: Icons.category_rounded,
                       color: AppColors.purpleColor,
                       label: "Catégories",
-                      value: controller.dashboard.value!.totalCategories.toString(),
+                      value:
+                          controller.dashboard.value!.totalCategories
+                              .toString(),
                     ),
                   ],
                 ),
@@ -276,10 +289,7 @@ class DashboardScreen extends StatelessWidget {
   }) {
     return ListTile(
       leading: Icon(icon, color: AppColors.primaryColor),
-      title: Text(
-        title,
-        style: TextStyle(color: AppColors.textColor),
-      ),
+      title: Text(title, style: TextStyle(color: AppColors.textColor)),
       onTap: onTap,
     );
   }
@@ -347,18 +357,13 @@ class _DashboardCard extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const _DashboardCard({
-    required this.title,
-    required this.children,
-  });
+  const _DashboardCard({required this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -367,15 +372,10 @@ class _DashboardCard extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            Column(
-              children: children,
-            ),
+            Column(children: children),
           ],
         ),
       ),
@@ -419,10 +419,7 @@ class _StatItem extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
                 Text(
                   value,
