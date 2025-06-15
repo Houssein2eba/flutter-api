@@ -5,8 +5,7 @@ import 'package:demo/models/stock_movement.dart';
 import 'package:get/get.dart';
 
 class StockMovementsController extends GetxController {
-  List<StockMovement> allMovements = []; // Store all movements
-  List<StockMovement> filteredMovements = []; // Store filtered movements
+  List<StockMovement> movements = []; // Store filtered movements
   StatusRequest statusRequest = StatusRequest.none;
 
   String? typeFilter;
@@ -25,14 +24,23 @@ class StockMovementsController extends GetxController {
   void fetchMovements() async {
     statusRequest = StatusRequest.loading;
     update();
-    var response = await movementData.getMovementsData(id: id!);
+    
+    var response = await movementData.getMovementsData(
+      id: id!,
+      type: typeFilter,
+    );
+    
     statusRequest = handlingData(response);
+    
     if (StatusRequest.success == statusRequest) {
       if (response['movements'] != null) {
-        allMovements = List<StockMovement>.from(
+        movements = List<StockMovement>.from(
           response['movements'].map((x) => StockMovement.fromJson(x)),
         );
-        applyFilters(); // Apply any existing filters
+        applySorting(); 
+        if(movements.isEmpty){
+          statusRequest=StatusRequest.failure;
+        }
       } else {
         statusRequest = StatusRequest.failure;
       }
@@ -40,14 +48,8 @@ class StockMovementsController extends GetxController {
     update();
   }
 
-  void applyFilters() {
-    filteredMovements = allMovements.where((movement) {
-      final matchesType = typeFilter == null || movement.type == typeFilter;
-      return matchesType;
-    }).toList();
-
-    // Apply sorting
-    filteredMovements.sort((a, b) {
+  void applySorting() {
+    movements.sort((a, b) {
       int compare;
       if (sortField == 'quantity') {
         compare = a.quantity.compareTo(b.quantity);
@@ -60,13 +62,11 @@ class StockMovementsController extends GetxController {
 
   void setTypeFilter(String? type) {
     typeFilter = type;
-    applyFilters();
-    update();
+    fetchMovements(); // Fetch fresh data with the new filter
   }
 
   void clearFilters() {
     typeFilter = null;
-    applyFilters();
-    update();
+    fetchMovements(); // Fetch fresh data without filters
   }
 }

@@ -8,14 +8,19 @@ class MovementData {
   MovementData(this.crud);
   StorageService storage = Get.find();
 
-  getMovementsData({required String id}) async {
+  getMovementsData({required String id, String? type}) async {
     String? token = storage.getToken();
-    var response=await crud.getData("${AppLinks.movements}/$id", {
+
+    String url = "${AppLinks.movements}/$id";
+    if (type != null) {
+      url += "?type=$type";
+    }
+
+    var response = await crud.getData(url, {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-    }
-    );
+    });
     return response.fold((l) => l, (r) => r);
   }
 }

@@ -145,10 +145,10 @@ class StockMovementsScreen extends StatelessWidget {
                   statusRequest: controller.statusRequest,
                   widget: ListView.separated(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: controller.filteredMovements.length,
+                    itemCount: controller.movements.length,
                     separatorBuilder: (context, index) => SizedBox(height: 8),
                     itemBuilder: (context, index) {
-                      final movement = controller.filteredMovements[index];
+                      final movement = controller.movements[index];
                       return Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
