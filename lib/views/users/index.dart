@@ -1,5 +1,6 @@
 import 'package:demo/controllers/user/user_controller.dart';
 import 'package:demo/core/constant/colors_class.dart';
+import 'package:demo/core/widgets/loadin_indicator.dart';
 import 'package:demo/models/user.dart';
 import 'package:demo/routes/web.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,6 @@ class UserPage extends StatelessWidget {
   UserPage({super.key});
 
   final UserController controller = Get.find();
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,21 +38,14 @@ class UserPage extends StatelessWidget {
         ),
         body: Obx(() {
           if (controller.isLoading.value) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primaryColor,
-              ),
-            );
+            return LoadinIndicator();
           }
 
           if (controller.users.isEmpty) {
             return Center(
               child: Text(
                 'Aucun employé trouvé',
-                style: TextStyle(
-                  color: AppColors.lightTextColor,
-                  fontSize: 16,
-                ),
+                style: TextStyle(color: AppColors.lightTextColor, fontSize: 16),
               ),
             );
           }
@@ -90,9 +82,7 @@ class UserPage extends StatelessWidget {
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -132,7 +122,7 @@ class UserPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            
+
             // Email row
             Row(
               children: [
@@ -140,15 +130,12 @@ class UserPage extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   user.email ?? 'Non renseigné',
-                  style: TextStyle(
-                    color: AppColors.textColor,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: AppColors.textColor, fontSize: 14),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            
+
             // Phone row
             Row(
               children: [
@@ -156,14 +143,11 @@ class UserPage extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   user.phone ?? 'Pas de numéro de téléphone',
-                  style: TextStyle(
-                    color: AppColors.textColor,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: AppColors.textColor, fontSize: 14),
                 ),
               ],
             ),
-            
+
             // Edit and Delete buttons
             const SizedBox(height: 16),
             Row(
@@ -233,26 +217,17 @@ class UserPage extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 12,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
         onPressed: () async {
           Get.back();
           await controller.deleteUser(user.id!);
         },
-        child: const Text(
-          'SUPPRIMER',
-          style: TextStyle(color: Colors.white),
-        ),
+        child: const Text('SUPPRIMER', style: TextStyle(color: Colors.white)),
       ),
       cancel: TextButton(
         onPressed: () => Get.back(),
-        child: Text(
-          'ANNULER',
-          style: TextStyle(color: AppColors.primaryColor),
-        ),
+        child: Text('ANNULER', style: TextStyle(color: AppColors.primaryColor)),
       ),
     );
   }

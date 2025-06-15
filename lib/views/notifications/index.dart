@@ -1,5 +1,6 @@
 import 'package:demo/controllers/notification_controller.dart';
 import 'package:demo/core/constant/colors_class.dart';
+import 'package:demo/core/widgets/loadin_indicator.dart';
 import 'package:demo/models/noification.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -83,7 +84,7 @@ class NotificationPage extends StatelessWidget {
       color: AppColors.primaryColor,
       child: Obx(() {
         if (notificationController.isLoading.value) {
-          return Center(child: CircularProgressIndicator(color: AppColors.primaryColor));
+          return LoadinIndicator();
         }
 
         if (notificationController.notifications.isEmpty) {

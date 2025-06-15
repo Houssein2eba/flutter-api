@@ -33,13 +33,13 @@ class Product {
       id: json['id'],
       name: json['name'],
       description: json['description'],
-      price: (json['price'] as num).toDouble(),
+      price: double.tryParse(json['price']?.toString() ?? '0') ?? 0.0,
       quantity: json['quantity']?.toInt() ?? 0,
       minQuantity: json['min_quantity']?.toInt() ?? 0,
       image: json['image'] ?? '',
       pivot: Pivot.fromJson(json['pivot']),
       createdAt: json['created_at'],
-      cost: (json['cost'] as num).toDouble(),
+      cost: double.tryParse(json['cost']?.toString() ?? '0') ?? 0.0,
       updatedAt: json['updated_at'],
     );
   }

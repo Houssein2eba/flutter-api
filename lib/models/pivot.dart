@@ -21,7 +21,7 @@ class Pivot {
       orderId: json['order_id'],
       productId: json['product_id'],
       quantity: json['quantity']?.toInt() ?? 0,
-      totalAmount: (json['total_amount'] as num?)?.toDouble() ?? 0.0,
+      totalAmount: double.tryParse(json['total_amount']?.toString() ?? '0') ?? 0.0,
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

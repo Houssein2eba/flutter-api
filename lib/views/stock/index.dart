@@ -1,6 +1,7 @@
 import 'package:demo/controllers/stock/stocks_controller.dart';
 import 'package:demo/core/constant/colors_class.dart';
 import 'package:demo/core/functions/handle_validation.dart';
+import 'package:demo/core/widgets/loadin_indicator.dart';
 import 'package:demo/models/stock.dart';
 import 'package:demo/routes/web.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class _StockCardState extends State<StockCard> {
         title: const Text(
           'Vue d\'ensemble des Stocks',
           style: TextStyle(
-            color: Colors.white, 
+            color: Colors.white,
             fontWeight: FontWeight.w700,
             fontSize: 20,
           ),
@@ -81,25 +82,7 @@ class _StockCardState extends State<StockCard> {
       ),
       body: Obx(() {
         if (controller.isLoading.value && controller.stocks.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                  strokeWidth: 3,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Chargement des stocks...',
-                  style: TextStyle(
-                    color: AppColors.lightTextColor,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          );
+          return LoadinIndicator();
         }
 
         return Column(
@@ -260,9 +243,9 @@ class _StockCardState extends State<StockCard> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Status Badge
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -273,14 +256,16 @@ class _StockCardState extends State<StockCard> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: stock.status == 'good'
-                            ? const Color(0xFF10B981).withOpacity(0.1)
-                            : const Color(0xFFEF4444).withOpacity(0.1),
+                        color:
+                            stock.status == 'good'
+                                ? const Color(0xFF10B981).withOpacity(0.1)
+                                : const Color(0xFFEF4444).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: stock.status == 'good'
-                              ? const Color(0xFF10B981).withOpacity(0.2)
-                              : const Color(0xFFEF4444).withOpacity(0.2),
+                          color:
+                              stock.status == 'good'
+                                  ? const Color(0xFF10B981).withOpacity(0.2)
+                                  : const Color(0xFFEF4444).withOpacity(0.2),
                           width: 1,
                         ),
                       ),
@@ -291,21 +276,25 @@ class _StockCardState extends State<StockCard> {
                             width: 6,
                             height: 6,
                             decoration: BoxDecoration(
-                              color: stock.status == 'good'
-                                  ? const Color(0xFF10B981)
-                                  : const Color(0xFFEF4444),
+                              color:
+                                  stock.status == 'good'
+                                      ? const Color(0xFF10B981)
+                                      : const Color(0xFFEF4444),
                               shape: BoxShape.circle,
                             ),
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            stock.status == 'good' ? 'Bon état' : (stock.status ?? 'Inconnu'),
+                            stock.status == 'good'
+                                ? 'Bon état'
+                                : (stock.status ?? 'Inconnu'),
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: stock.status == 'good'
-                                  ? const Color(0xFF065F46)
-                                  : const Color(0xFF991B1B),
+                              color:
+                                  stock.status == 'good'
+                                      ? const Color(0xFF065F46)
+                                      : const Color(0xFF991B1B),
                             ),
                           ),
                         ],
@@ -417,7 +406,12 @@ class _StockCardState extends State<StockCard> {
     );
   }
 
-  Widget _buildModernStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildModernStatItem(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -429,11 +423,7 @@ class _StockCardState extends State<StockCard> {
                 color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                icon,
-                size: 16,
-                color: color,
-              ),
+              child: Icon(icon, size: 16, color: color),
             ),
             const SizedBox(width: 8),
             Expanded(

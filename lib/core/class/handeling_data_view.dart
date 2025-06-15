@@ -1,6 +1,7 @@
 
 import 'package:demo/core/class/status_request.dart';
 import 'package:demo/core/constant/image_asset_link.dart';
+import 'package:demo/core/widgets/loadin_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -13,7 +14,7 @@ class HandlingDataView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return statusRequest == StatusRequest.loading
-        ?   Center(child: Lottie.asset(ImagesAssets.loading , width: 250 , height: 250))
+        ?   LoadinIndicator()
         : statusRequest == StatusRequest.offlineFailure
             ? Center(child: Lottie.asset(ImagesAssets.offline , width: 250 , height: 250))
             : statusRequest == StatusRequest.serverFailure

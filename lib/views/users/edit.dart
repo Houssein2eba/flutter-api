@@ -1,6 +1,7 @@
 import 'package:demo/controllers/user/user_controller.dart';
 import 'package:demo/controllers/user/edit_controller.dart';
 import 'package:demo/core/constant/colors_class.dart';
+import 'package:demo/core/widgets/loadin_indicator.dart';
 import 'package:demo/wigets/form_field.dart';
 import 'package:demo/wigets/special_button.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,6 @@ class EditUser extends StatelessWidget {
 
   final EditUserController controller = Get.put(EditUserController());
   final UserController roleController = Get.put(UserController());
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -129,11 +128,7 @@ class EditUser extends StatelessWidget {
                       const SizedBox(height: 20),
                       Obx(() {
                         if (roleController.isLoading.value) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.primaryColor,
-                            ),
-                          );
+                          return LoadinIndicator();
                         }
 
                         return InputDecorator(
@@ -155,32 +150,44 @@ class EditUser extends StatelessWidget {
                           ),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButtonFormField<String>(
-                              value: controller.selectedRoleId.value.isEmpty
-                                  ? null
-                                  : controller.selectedRoleId.value,
+                              value:
+                                  controller.selectedRoleId.value.isEmpty
+                                      ? null
+                                      : controller.selectedRoleId.value,
                               isExpanded: true,
                               hint: Text(
                                 'Sélectionner un Rôle',
-                                style: TextStyle(color: AppColors.lightTextColor),
+                                style: TextStyle(
+                                  color: AppColors.lightTextColor,
+                                ),
                               ),
-                              items: roleController.roles.map((role) {
-                                return DropdownMenuItem<String>(
-                                  value: role!.id.toString(),
-                                  child: Text(
-                                    role.name!,
-                                    style: TextStyle(color: AppColors.textColor),
-                                  ),
-                                );
-                              }).toList(),
-                              validator: (value) =>
-                                  value == null ? 'Veuillez sélectionner un rôle' : null,
+                              items:
+                                  roleController.roles.map((role) {
+                                    return DropdownMenuItem<String>(
+                                      value: role!.id.toString(),
+                                      child: Text(
+                                        role.name!,
+                                        style: TextStyle(
+                                          color: AppColors.textColor,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                              validator:
+                                  (value) =>
+                                      value == null
+                                          ? 'Veuillez sélectionner un rôle'
+                                          : null,
                               onChanged: (String? value) {
                                 if (value != null) {
                                   controller.selectedRoleId.value = value;
                                 }
                               },
                               dropdownColor: Colors.white,
-                              icon: Icon(Icons.arrow_drop_down, color: AppColors.lightTextColor),
+                              icon: Icon(
+                                Icons.arrow_drop_down,
+                                color: AppColors.lightTextColor,
+                              ),
                             ),
                           ),
                         );
@@ -192,12 +199,13 @@ class EditUser extends StatelessWidget {
                           text: 'Confirmer',
                           onPress: () async {
                             if (controller.formKey.currentState!.validate()) {
-                              await controller.updateUser(id: controller.user!.id!);
+                              await controller.updateUser(
+                                id: controller.user!.id!,
+                              );
                             }
                           },
                           color: AppColors.primaryColor,
                           textColor: Colors.white,
-                          
                         ),
                       ),
                     ],
