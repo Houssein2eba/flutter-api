@@ -1,45 +1,53 @@
+import 'package:demo/controllers/user/user_controller.dart';
 import 'package:demo/core/constant/colors_class.dart';
+import 'package:demo/core/widgets/silver_appbar.dart';
+import 'package:demo/wigets/special_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:demo/controllers/user/user_controller.dart';
 
 class CreateUser extends StatelessWidget {
   CreateUser({super.key});
   final UserController controller = Get.find();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        title: Text(
-          'Nouvel Employé',
-          style: TextStyle(
-            color: AppColors.backgroundColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+      backgroundColor: Colors.grey[50],
+      body: CustomScrollView(
+        slivers: [
+          CustomSilverAppbar(title: 'Nouvel Employé'),
+          SliverToBoxAdapter(
+            child: _buildFormContent(),
           ),
-        ),
-        centerTitle: true,
-        backgroundColor: AppColors.primaryColor,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.white),
+        ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: controller.formkey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 32),
-              _buildFormFields(),
-              const SizedBox(height: 24),
-              _buildSubmitButton(),
-            ],
-          ),
+    );
+  }
+
+  Widget _buildFormContent() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Form(
+        key: controller.formkey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildHeader(),
+            const SizedBox(height: 32),
+            _buildNameField(),
+            const SizedBox(height: 16),
+            _buildEmailField(),
+            const SizedBox(height: 16),
+            _buildPasswordField(),
+            const SizedBox(height: 16),
+            _buildConfirmPasswordField(),
+            const SizedBox(height: 16),
+            _buildPhoneField(),
+            const SizedBox(height: 16),
+            _buildRoleDropdown(),
+            const SizedBox(height: 40),
+            _buildSubmitButton(),
+          ],
         ),
       ),
     );
@@ -47,22 +55,23 @@ class CreateUser extends StatelessWidget {
 
   Widget _buildHeader() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.primaryColor.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            Icons.person_add_alt_1,
-            size: 32,
-            color: AppColors.primaryColor,
+          padding: const EdgeInsets.all(24),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.person_add_alt_1,
+              size: 40,
+              color: AppColors.primaryColor,
+            ),
           ),
         ),
-        const SizedBox(height: 16),
         Text(
           'Ajouter un nouvel employé',
           style: TextStyle(
@@ -70,6 +79,7 @@ class CreateUser extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: AppColors.textColor,
           ),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Text(
@@ -78,51 +88,52 @@ class CreateUser extends StatelessWidget {
             fontSize: 14,
             color: AppColors.lightTextColor,
           ),
+          textAlign: TextAlign.center,
         ),
       ],
     );
   }
 
-  Widget _buildFormFields() {
-    return Column(
-      children: [
-        TextFormField(
+  Widget _buildNameField() {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: TextFormField(
           controller: controller.nameController,
           decoration: InputDecoration(
             labelText: 'Nom complet',
             labelStyle: TextStyle(color: AppColors.lightTextColor),
+            border: InputBorder.none,
             prefixIcon: Icon(Icons.person_outline, color: AppColors.lightTextColor),
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
-            ),
           ),
           validator: (value) => value?.isEmpty ?? true ? 'Veuillez entrer le nom complet' : null,
         ),
-        const SizedBox(height: 16),
-        TextFormField(
+      ),
+    );
+  }
+
+  Widget _buildEmailField() {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: TextFormField(
           controller: controller.emailController,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             labelText: 'Adresse e-mail',
             labelStyle: TextStyle(color: AppColors.lightTextColor),
+            border: InputBorder.none,
             prefixIcon: Icon(Icons.email_outlined, color: AppColors.lightTextColor),
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
-            ),
           ),
           validator: (value) {
             if (value?.isEmpty ?? true) return "Veuillez entrer l'adresse e-mail";
@@ -130,13 +141,26 @@ class CreateUser extends StatelessWidget {
             return null;
           },
         ),
-        const SizedBox(height: 16),
-        Obx(() => TextFormField(
+      ),
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return Obx(() => Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Colors.grey.shade200, width: 1),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextFormField(
               controller: controller.passwordController,
               obscureText: !controller.isPasswordVisible.value,
               decoration: InputDecoration(
                 labelText: 'Mot de passe',
                 labelStyle: TextStyle(color: AppColors.lightTextColor),
+                border: InputBorder.none,
                 prefixIcon: Icon(Icons.lock_outline, color: AppColors.lightTextColor),
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -147,30 +171,33 @@ class CreateUser extends StatelessWidget {
                   ),
                   onPressed: () => controller.isPasswordVisible.toggle(),
                 ),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
-                ),
               ),
               validator: (value) {
                 if (value?.isEmpty ?? true) return 'Veuillez entrer un mot de passe';
                 if (value!.length < 6) return 'Le mot de passe doit contenir au moins 6 caractères';
                 return null;
               },
-            )),
-        const SizedBox(height: 16),
-        Obx(() => TextFormField(
+            ),
+          ),
+        ));
+  }
+
+  Widget _buildConfirmPasswordField() {
+    return Obx(() => Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Colors.grey.shade200, width: 1),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextFormField(
               controller: controller.confirmPasswordController,
               obscureText: !controller.isConfirmPasswordVisible.value,
               decoration: InputDecoration(
                 labelText: 'Confirmer le mot de passe',
                 labelStyle: TextStyle(color: AppColors.lightTextColor),
+                border: InputBorder.none,
                 prefixIcon: Icon(Icons.lock_outline, color: AppColors.lightTextColor),
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -181,42 +208,36 @@ class CreateUser extends StatelessWidget {
                   ),
                   onPressed: () => controller.isConfirmPasswordVisible.toggle(),
                 ),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
-                ),
               ),
               validator: (value) {
                 if (value?.isEmpty ?? true) return 'Veuillez confirmer le mot de passe';
                 if (value != controller.passwordController.text) return 'Les mots de passe ne correspondent pas';
                 return null;
               },
-            )),
-        const SizedBox(height: 16),
-        TextFormField(
+            ),
+          ),
+        ));
+  }
+
+  Widget _buildPhoneField() {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: TextFormField(
           controller: controller.phoneController,
           keyboardType: TextInputType.phone,
-                        maxLength: 8,
+          maxLength: 8,
           decoration: InputDecoration(
             labelText: 'Numéro de téléphone',
             labelStyle: TextStyle(color: AppColors.lightTextColor),
+            border: InputBorder.none,
             prefixIcon: Icon(Icons.phone_outlined, color: AppColors.lightTextColor),
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
-            ),
+            counterText: '',
           ),
           validator: (value) {
             if (value?.isEmpty ?? true) return 'Veuillez entrer le numéro de téléphone';
@@ -226,22 +247,26 @@ class CreateUser extends StatelessWidget {
             return null;
           },
         ),
-        const SizedBox(height: 16),
-        Obx(() => DropdownButtonFormField<String>(
+      ),
+    );
+  }
+
+  Widget _buildRoleDropdown() {
+    return Obx(() => Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Colors.grey.shade200, width: 1),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: DropdownButtonFormField<String>(
               value: controller.selectedRoleId.value.isEmpty ? null : controller.selectedRoleId.value,
               decoration: InputDecoration(
                 labelText: 'Rôle',
                 labelStyle: TextStyle(color: AppColors.lightTextColor),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
-                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 8),
               ),
               items: controller.roles.map((role) {
                 return DropdownMenuItem<String>(
@@ -262,54 +287,36 @@ class CreateUser extends StatelessWidget {
               ),
               dropdownColor: Colors.white,
               style: TextStyle(color: AppColors.textColor),
-            )
             ),
-            
-      ],
-    );
+          ),
+        ));
   }
 
   Widget _buildSubmitButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () async {
-          if (controller.formkey.currentState!.validate()) {
-            if (controller.selectedRoleId.value.isEmpty) {
-              Get.snackbar(
-                'Erreur',
-                'Veuillez sélectionner un rôle',
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: Colors.red[400],
-                colorText: Colors.white,
-              );
-              return;
-            }
-
-            final success = await controller.createEmployee();
-
-            if (success) {
-              Get.back();
-            }
+    return SpecialButton(
+      text: "Créer l'employé",
+      onPress: () async {
+        if (controller.formkey.currentState!.validate()) {
+          if (controller.selectedRoleId.value.isEmpty) {
+            Get.snackbar(
+              'Erreur',
+              'Veuillez sélectionner un rôle',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red[400],
+              colorText: Colors.white,
+            );
+            return;
           }
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryColor,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 0,
-        ),
-        child: const Text(
-          "Créer l'employé",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+
+          final success = await controller.createEmployee();
+
+          if (success) {
+            Get.back();
+          }
+        }
+      },
+      color: AppColors.primaryColor,
+      textColor: Colors.white,
     );
   }
 }

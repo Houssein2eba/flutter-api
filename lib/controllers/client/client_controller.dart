@@ -68,6 +68,7 @@ class Clientscontroller extends AbstractClientsController {
     }
   }
 
+
   @override
   Future<void> searchClient(String search) async {
     if (search.isEmpty) {
@@ -76,7 +77,14 @@ class Clientscontroller extends AbstractClientsController {
       await fetchClients(search: search);
     }
   }
-
+    void performSearch() {
+    final query = searchController.text;
+    if (query.isEmpty) {
+      fetchClients();
+    } else {
+      searchClient(query);
+    }
+  }
   @override
   Future<void> deleteClient({required String id}) async {
     try {

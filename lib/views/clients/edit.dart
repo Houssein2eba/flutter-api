@@ -1,50 +1,47 @@
+import 'package:demo/controllers/client/update_client_controller.dart';
 import 'package:demo/core/constant/colors_class.dart';
+import 'package:demo/core/widgets/silver_appbar.dart';
+import 'package:demo/wigets/special_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:demo/controllers/client/update_client_controller.dart';
 
 class EditClientScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   EditClientScreen({super.key});
-
-
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(UpdateClientController());
 
     return Scaffold(
-      backgroundColor:  AppColors.backgroundColor,
-      appBar: AppBar(
-        title: Text(
-          'Modifier Client',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+      backgroundColor: Colors.grey[50],
+      body: CustomScrollView(
+        slivers: [
+          CustomSilverAppbar(title: 'Modifier Client'),
+          SliverToBoxAdapter(
+            child: _buildFormContent(controller),
           ),
-        ),
-        centerTitle: true,
-        backgroundColor: AppColors.primaryColor,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.white),
+        ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 32),
-              _buildNameField(controller),
-              const SizedBox(height: 16),
-              _buildPhoneField(controller),
-              const SizedBox(height: 32),
-              _buildUpdateButton(controller),
-            ],
-          ),
+    );
+  }
+
+  Widget _buildFormContent(UpdateClientController controller) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildHeader(),
+            const SizedBox(height: 32),
+            _buildNameField(controller),
+            const SizedBox(height: 20),
+            _buildPhoneField(controller),
+            const SizedBox(height: 40),
+            _buildUpdateButton(controller),
+          ],
         ),
       ),
     );
@@ -54,18 +51,21 @@ class EditClientScreen extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.primaryColor.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            Icons.person_outline,
-            size: 40,
-            color: AppColors.primaryColor,
+          alignment: Alignment.center,
+          padding: const EdgeInsets.all(24),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.person_outline,
+              size: 40,
+              color: AppColors.primaryColor,
+            ),
           ),
         ),
-        const SizedBox(height: 16),
         Text(
           'Modifier les détails du client',
           style: TextStyle(
@@ -73,6 +73,7 @@ class EditClientScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: AppColors.textColor,
           ),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Text(
@@ -81,95 +82,81 @@ class EditClientScreen extends StatelessWidget {
             fontSize: 14,
             color: AppColors.lightTextColor,
           ),
+          textAlign: TextAlign.center,
         ),
       ],
     );
   }
 
   Widget _buildNameField(UpdateClientController controller) {
-    return TextFormField(
-      controller: controller.nameController,
-      decoration: InputDecoration(
-        labelText: 'Nom Complet',
-        labelStyle: TextStyle(color: AppColors.lightTextColor),
-        prefixIcon: Icon(Icons.person_outline, color: AppColors.lightTextColor),
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: AppColors.primaryColor,
-            width: 1.5,
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: TextFormField(
+          controller: controller.nameController,
+          decoration: InputDecoration(
+            labelText: 'Nom Complet',
+            labelStyle: TextStyle(color: AppColors.lightTextColor),
+            border: InputBorder.none,
+            prefixIcon: Icon(Icons.person_outline, color: AppColors.lightTextColor),
           ),
+          style: TextStyle(color: AppColors.textColor),
+          validator: (value) => value?.isEmpty ?? true ? 'Veuillez entrer un nom' : null,
         ),
       ),
-      style: TextStyle(color: AppColors.textColor),
-      validator: (value) => value?.isEmpty ?? true ? 'Veuillez entrer un nom' : null,
     );
   }
 
   Widget _buildPhoneField(UpdateClientController controller) {
-    return TextFormField(
-      controller: controller.phoneController,
-      keyboardType: TextInputType.phone,
-      decoration: InputDecoration(
-        labelText: 'Numéro de Téléphone',
-        labelStyle: TextStyle(color: AppColors.lightTextColor),
-        prefixIcon: Icon(Icons.phone_outlined, color: AppColors.lightTextColor),
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: AppColors.primaryColor,
-            width: 1.5,
-          ),
-        ),
-        hintText: 'ex: 21234567',
-        hintStyle: TextStyle(color: AppColors.lightTextColor.withOpacity(0.5)),
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200, width: 1),
       ),
-      style: TextStyle(color: AppColors.textColor),
-      validator: (value) {
-        if (value?.isEmpty ?? true) return 'Veuillez entrer un numéro de téléphone';
-        if (!RegExp(r'^[2-4][0-9]{7}$').hasMatch(value!)) {
-          return 'Numéro de téléphone invalide';
-        }
-        return null;
-      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: TextFormField(
+          controller: controller.phoneController,
+          keyboardType: TextInputType.phone,
+          maxLength: 8,
+          decoration: InputDecoration(
+            labelText: 'Numéro de Téléphone',
+            labelStyle: TextStyle(color: AppColors.lightTextColor),
+            border: InputBorder.none,
+            prefixIcon: Icon(Icons.phone_outlined, color: AppColors.lightTextColor),
+            counterText: '',
+            hintText: 'ex: 21234567',
+            hintStyle: TextStyle(color: AppColors.lightTextColor.withOpacity(0.5)),
+          ),
+          style: TextStyle(color: AppColors.textColor),
+          validator: (value) {
+            if (value?.isEmpty ?? true) return 'Veuillez entrer un numéro de téléphone';
+            if (!RegExp(r'^[2-4][0-9]{7}$').hasMatch(value!)) {
+              return 'Numéro de téléphone invalide';
+            }
+            return null;
+          },
+        ),
+      ),
     );
   }
 
   Widget _buildUpdateButton(UpdateClientController controller) {
-    return ElevatedButton(
-      onPressed: () async {
+    return SpecialButton(
+      text: 'Mettre à jour',
+      onPress: () async {
         if (_formKey.currentState!.validate()) {
           await controller.updateClient();
         }
       },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primaryColor,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        elevation: 0,
-      ),
-      child: const Text(
-        'Mettre à jour',
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      color: AppColors.primaryColor,
+      textColor: Colors.white,
     );
   }
 }

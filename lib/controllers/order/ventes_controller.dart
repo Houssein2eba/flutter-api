@@ -21,7 +21,7 @@ class StockMovementsController extends GetxController {
     fetchMovements();
   }
 
-  void fetchMovements() async {
+  Future<void> fetchMovements() async {
     statusRequest = StatusRequest.loading;
     update();
     
