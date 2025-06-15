@@ -33,19 +33,18 @@ class Dashboard {
 
   factory Dashboard.fromJson(Map<String, dynamic> json) {
     return Dashboard(
-      totalProducts: json['totalProducts'] ?? 0,
-      lowStockCount: json['lowStockCount'] ?? 0,
-
-      totalSales: json['totalSales'] ?? 0,
-      clientCount: json['clientCount'] ?? 0,
-      stocksCount: json['stocksCount'] ?? 0,
-      totalCategories: json['totalCategories'] ?? 0,
-      totalRevenue: (json['todayRevenue'] ?? 0).toDouble(),
-      totalProfit: (json['totalProfit'] ?? 0).toDouble(),
-      todaySales: json['todaySales'] ?? 0,
-      todayRevenue: (json['totalRevenue'] ?? 0).toDouble(),
-      dueAmount: (json['dueAmount'] ?? 0).toDouble(),
-      paidAmount: (json['paidAmount'] ?? 0).toDouble(),
+    totalProducts: int.tryParse(json['totalProducts'].toString()) ?? 0,
+    lowStockCount: int.tryParse(json['lowStockCount'].toString()) ?? 0,
+    totalSales: int.tryParse(json['totalSales'].toString()) ?? 0,
+    clientCount: int.tryParse(json['clientCount'].toString()) ?? 0,
+    stocksCount: int.tryParse(json['stocksCount'].toString()) ?? 0,
+    totalCategories: int.tryParse(json['totalCategories'].toString()) ?? 0,
+    totalRevenue: double.tryParse(json['totalRevenue'].toString()) ?? 0.0,
+    totalProfit: double.tryParse(json['totalProfit'].toString()) ?? 0.0,
+    todaySales: int.tryParse(json['todaySales'].toString()) ?? 0,
+    todayRevenue: double.tryParse(json['todayRevenue'].toString()) ?? 0.0,
+    dueAmount: double.tryParse(json['dueAmount'].toString()) ?? 0.0,
+    paidAmount: double.tryParse(json['paidAmount'].toString()) ?? 0.0,
     );
   }
 }

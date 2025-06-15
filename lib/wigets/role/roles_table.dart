@@ -1,4 +1,5 @@
 import 'package:demo/controllers/role/roles_controller.dart';
+import 'package:demo/core/constant/colors_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -43,8 +44,8 @@ class RolesTable extends GetView<RolesController> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue),
-                        onPressed: () => null,
+                        icon: Icon(Icons.edit, color: AppColors.primaryColor),
+                        onPressed: (){},
                       ),
                       IconButton(
                         icon: Icon(Icons.delete, color: Colors.red),

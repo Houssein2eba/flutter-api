@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class AppColors{
 
-  static Color primaryColor = const Color(0xFF6C63FF); // Purple-ish
+  static Color primaryColor = const Color(0xFF2563EB); // Purple-ish
   static Color secondaryColor = const Color(0xFF4A40BF); // Darker purple
   static Color accentColor = const Color(0xFFF8B400); // Golden yellow
   static Color backgroundColor = const Color(0xFFF9F9F9); // Light gray

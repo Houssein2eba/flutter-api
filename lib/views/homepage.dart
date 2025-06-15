@@ -87,9 +87,12 @@ class HomePage extends StatelessWidget {
             suffixIcon: IconButton(
               icon: Icon(Icons.close, color: AppColors.lightTextColor),
               onPressed: () {
-                controller.searchController.clear();
-                controller.fetchClients();
+                if (controller.searchController.text.isNotEmpty) {
+                  controller.searchController.clear();
+                  controller.fetchClients();
+                }
               },
+
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 20),
           ),
@@ -244,7 +247,11 @@ class HomePage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
         onPressed: () async {
-          Get.back();
+          if (Get.isDialogOpen ?? false) {
+            Get.back(); 
+            await Future.delayed(Duration(milliseconds: 200)); 
+          }
+
           await clientController.deleteClient(id: clientId);
         },
         child: const Text(

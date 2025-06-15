@@ -202,6 +202,7 @@ class CreateUser extends StatelessWidget {
         TextFormField(
           controller: controller.phoneController,
           keyboardType: TextInputType.phone,
+                        maxLength: 8,
           decoration: InputDecoration(
             labelText: 'Numéro de téléphone',
             labelStyle: TextStyle(color: AppColors.lightTextColor),

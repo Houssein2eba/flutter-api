@@ -19,20 +19,20 @@ class StocksController extends GetxController {
   }
 
   Future<void> loadStocks({bool loadMore = false}) async {
-    if ((loadMore && !hasMore.value) || (loadMore && isLoadingMore.value) || (!loadMore && isLoading.value)) {
+    if ((loadMore && !hasMore.value) ||
+        (loadMore && isLoadingMore.value) ||
+        (!loadMore && isLoading.value)) {
       return;
     }
 
     loadMore ? isLoadingMore(true) : isLoading(true);
 
-
     try {
       final token = storage.getToken();
-      final url = loadMore && nextCursor.value.isNotEmpty
-          ? 'http://192.168.100.13:8000/api/stocks?cursor=${nextCursor.value}'
-          : 'http://192.168.100.13:8000/api/stocks';
-
-
+      final url =
+          loadMore && nextCursor.value.isNotEmpty
+              ? 'http://192.168.100.13:8000/api/stocks?cursor=${nextCursor.value}'
+              : 'http://192.168.100.13:8000/api/stocks';
 
       final response = await http.get(
         Uri.parse(url),
@@ -42,34 +42,26 @@ class StocksController extends GetxController {
         },
       );
 
-
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        
+
         if (!loadMore) {
           stocks.clear();
         }
 
         final List<dynamic> stocksData = data['stocks'] ?? [];
+        print("=====stocks==${stocksData[0]['totalProducts'].runtimeType}");
         stocks.addAll(stocksData.map((item) => Stock.fromJson(item)));
 
         if (data['meta'] != null) {
           nextCursor.value = data['meta']['next_cursor']?.toString() ?? '';
           hasMore.value = data['meta']['has_more'] ?? false;
         }
-
-
       } else {
         throw Exception('Failed to load stocks: ${response.statusCode}');
       }
     } catch (e) {
-      
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading(false);
       isLoadingMore(false);

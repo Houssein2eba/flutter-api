@@ -27,9 +27,9 @@ class Stock {
       name: json['name'] ?? '',
       location: json['location'] ?? '',
       status: json['status'] ?? '',
-      productTypes: json['productsCount'] ?? 0,
-      totalProducts: json['totalProducts'] ?? 0,
-      totalValue: (json['totalValue'] ?? 0).toDouble(),
+productTypes: int.tryParse(json['productsCount'].toString()) ?? 0,
+totalProducts: int.tryParse(json['totalProducts'].toString()) ?? 0,
+totalValue: double.tryParse(json['totalValue'].toString()) ?? 0.0,
       updatedAt: json['updated_at'] ?? '',
     );
   }

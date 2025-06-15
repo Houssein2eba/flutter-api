@@ -1,5 +1,6 @@
 import 'package:demo/controllers/role/roles_controller.dart';
 import 'package:demo/core/class/handeling_data_view.dart';
+import 'package:demo/core/constant/colors_class.dart';
 import 'package:demo/routes/web.dart';
 import 'package:demo/wigets/role/build_statd_card.dart';
 import 'package:demo/wigets/role/roles_table.dart';
@@ -14,7 +15,13 @@ class RolesScreen extends StatelessWidget {
    RolesController rolesController =  Get.put(RolesController());
 
     return Scaffold(
-      appBar: AppBar(title: Text('Les Roles')),
+      appBar: AppBar(
+        title: Text('Les Roles'),
+        backgroundColor: AppColors.primaryColor,
+        iconTheme: IconThemeData(color: AppColors.backgroundColor),
+        centerTitle: true,
+
+        ),
       body: GetBuilder<RolesController>(
         builder: (controller) {
           return HandlingDataView(
@@ -25,6 +32,7 @@ class RolesScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () =>Get.toNamed(RouteClass.crateRole),
         tooltip: 'Ajouter un role',
+        backgroundColor: AppColors.primaryColor,
         child: Icon(Icons.add),
       ),
     );

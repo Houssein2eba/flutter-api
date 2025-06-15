@@ -1,6 +1,6 @@
 import 'package:demo/controllers/notification_controller.dart';
+import 'package:demo/core/constant/colors_class.dart';
 import 'package:demo/models/noification.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -8,13 +8,7 @@ import 'package:intl/intl.dart';
 class NotificationPage extends StatelessWidget {
   final NotificationController notificationController = Get.find();
 
-  // Custom color palette matching login screen
-  final Color primaryColor = const Color(0xFF6C63FF);
-  final Color secondaryColor = const Color(0xFF4A40BF);
-  final Color accentColor = const Color(0xFFF8B400);
-  final Color backgroundColor = const Color(0xFFF9F9F9);
-  final Color textColor = const Color(0xFF333333);
-  final Color lightTextColor = const Color(0xFF777777);
+
 
   NotificationPage({super.key});
 
@@ -22,7 +16,7 @@ class NotificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: AppColors.backgroundColor,
         appBar: _buildAppBar(),
         body: _buildNotificationList(),
       ),
@@ -40,7 +34,7 @@ class NotificationPage extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: primaryColor,
+      backgroundColor: AppColors.primaryColor,
       elevation: 0,
       iconTheme: IconThemeData(color: Colors.white),
       actions: [
@@ -86,10 +80,10 @@ class NotificationPage extends StatelessWidget {
   Widget _buildNotificationList() {
     return RefreshIndicator(
       onRefresh: notificationController.fetchNotifications,
-      color: primaryColor,
+      color: AppColors.primaryColor,
       child: Obx(() {
         if (notificationController.isLoading.value) {
-          return Center(child: CircularProgressIndicator(color: primaryColor));
+          return Center(child: CircularProgressIndicator(color: AppColors.primaryColor));
         }
 
         if (notificationController.notifications.isEmpty) {
@@ -113,27 +107,31 @@ class NotificationPage extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        
         children: [
-          Icon(Icons.notifications_off, size: 60, color: lightTextColor),
+          Icon(Icons.notifications_off, size: 60, color: AppColors.lightTextColor),
           const SizedBox(height: 16),
           Text(
+
             'Aucune notification',
             style: TextStyle(
               fontSize: 18,
-              color: textColor,
+              color: AppColors.textColor,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
+            textAlign: TextAlign.center,
+            
             'Nous vous informerons lorsque quelque chose arrive',
-            style: TextStyle(color: lightTextColor),
+            style: TextStyle(color: AppColors.lightTextColor),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: notificationController.fetchNotifications,
             style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
+              backgroundColor: AppColors.primaryColor,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -162,7 +160,7 @@ class NotificationPage extends StatelessWidget {
         child: Container(
           color: notification.isRead 
               ? Colors.white 
-              : primaryColor.withOpacity(0.1),
+              : AppColors.primaryColor.withOpacity(0.1),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +173,7 @@ class NotificationPage extends StatelessWidget {
                     child: Text(
                       notification.message ?? 'Pas de message',
                       style: TextStyle(
-                        color: textColor,
+                        color: AppColors.textColor,
                         fontWeight: notification.isRead 
                             ? FontWeight.normal 
                             : FontWeight.bold,
@@ -206,14 +204,14 @@ class NotificationPage extends StatelessWidget {
   Future<void> _handleDismiss(Notificatione notification) async {
     final confirmed = await Get.defaultDialog<bool>(
       title: 'Supprimer la Notification',
-      titleStyle: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+      titleStyle: TextStyle(color: AppColors.textColor, fontWeight: FontWeight.bold),
       middleText: 'Êtes-vous sûr de vouloir supprimer cette notification ?',
-      middleTextStyle: TextStyle(color: lightTextColor),
+      middleTextStyle: TextStyle(color: AppColors.lightTextColor),
       textConfirm: 'Supprimer',
       textCancel: 'Annuler',
       confirmTextColor: Colors.white,
       buttonColor: Colors.red[400],
-      cancelTextColor: primaryColor,
+      cancelTextColor: AppColors.primaryColor,
       onConfirm: () => Get.back(result: true),
       onCancel: () => Get.back(result: false),
     );
@@ -240,7 +238,7 @@ class NotificationPage extends StatelessWidget {
   Widget _buildReadStatusIcon(Notificatione notification) {
     return Icon(
       notification.isRead ? Icons.check_circle : Icons.info,
-      color: notification.isRead ? Colors.green : primaryColor,
+      color: notification.isRead ? Colors.green : AppColors.primaryColor,
       size: 20,
     );
   }
@@ -250,7 +248,7 @@ class NotificationPage extends StatelessWidget {
       width: 8,
       height: 8,
       decoration: BoxDecoration(
-        color: primaryColor,
+        color: AppColors.primaryColor,
         shape: BoxShape.circle,
       ),
     );
@@ -259,7 +257,7 @@ class NotificationPage extends StatelessWidget {
   Widget _buildTimestamp(DateTime createdAt, DateFormat dateFormat) {
     return Text(
       dateFormat.format(createdAt),
-      style: TextStyle(color: lightTextColor, fontSize: 12),
+      style: TextStyle(color: AppColors.lightTextColor, fontSize: 12),
     );
   }
 }

@@ -83,6 +83,7 @@ class CreateClient extends StatelessWidget {
                         controller: nameController,
                         decoration: InputDecoration(
                           labelText: 'Nom Complet',
+                          
                           labelStyle: TextStyle(color: AppColors.lightTextColor),
                           prefixIcon: Icon(
                             Icons.person_outline,
@@ -116,6 +117,7 @@ class CreateClient extends StatelessWidget {
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: phoneController,
+                        maxLength: 8,
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                           labelText: 'Numéro de Téléphone',

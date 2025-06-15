@@ -80,7 +80,7 @@ class ClientDetailsPage extends StatelessWidget {
 
                 // Orders Section Header
                 Text(
-                  'Historique des Commandes',
+                  'Historique des Ventes',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

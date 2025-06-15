@@ -86,7 +86,7 @@ class DashboardScreen extends StatelessWidget {
                   _buildDrawerItem(
                     icon: Icons.help,
                     title: 'Aide & Retour',
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => Get.toNamed(RouteClass.stockMovements),
                   ),
                 ],
               ),
@@ -127,16 +127,16 @@ class DashboardScreen extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: AppColors.textColor,
+            color: AppColors.backgroundColor,
           ),
         ),
         centerTitle: true,
         elevation: 0,
         backgroundColor: AppColors.primaryColor,
-        iconTheme: IconThemeData(color: AppColors.textColor),
+        iconTheme: IconThemeData(color: AppColors.backgroundColor),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications, color: AppColors.textColor),
+            icon: Icon(Icons.notifications, color: AppColors.backgroundColor),
             onPressed: () => Get.toNamed('/notifications'),
           ),
         ],

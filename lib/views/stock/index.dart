@@ -1,6 +1,8 @@
 import 'package:demo/controllers/stock/stocks_controller.dart';
+import 'package:demo/core/constant/colors_class.dart';
 import 'package:demo/core/functions/handle_validation.dart';
 import 'package:demo/models/stock.dart';
+import 'package:demo/routes/web.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,14 +17,6 @@ class _StockCardState extends State<StockCard> {
   final StocksController controller = Get.find();
   late final ScrollController scrollController;
 
-  // Custom color palette matching login screen
-  final Color primaryColor = const Color(0xFF6C63FF);
-  final Color secondaryColor = const Color(0xFF4A40BF);
-  final Color accentColor = const Color(0xFFF8B400);
-  final Color backgroundColor = const Color(0xFFF9F9F9);
-  final Color textColor = const Color(0xFF333333);
-  final Color lightTextColor = const Color(0xFF777777);
-
   @override
   void initState() {
     super.initState();
@@ -34,8 +28,8 @@ class _StockCardState extends State<StockCard> {
   }
 
   void _onScroll() {
-    if (!scrollController.hasClients || 
-        controller.isLoadingMore.value || 
+    if (!scrollController.hasClients ||
+        controller.isLoadingMore.value ||
         !controller.hasMore.value) {
       return;
     }
@@ -57,24 +51,21 @@ class _StockCardState extends State<StockCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         title: Text(
           'Vue d\'ensemble des Stocks',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: primaryColor,
+        backgroundColor: AppColors.primaryColor,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Obx(() {
         if (controller.isLoading.value && controller.stocks.isEmpty) {
           return Center(
-            child: CircularProgressIndicator(color: primaryColor),
+            child: CircularProgressIndicator(color: AppColors.primaryColor),
           );
         }
 
@@ -85,7 +76,7 @@ class _StockCardState extends State<StockCard> {
                 onRefresh: () async {
                   await controller.loadStocks();
                 },
-                color: primaryColor,
+                color: AppColors.primaryColor,
                 child: GridView.builder(
                   controller: scrollController,
                   padding: const EdgeInsets.all(16),
@@ -95,13 +86,17 @@ class _StockCardState extends State<StockCard> {
                     mainAxisSpacing: 16,
                     childAspectRatio: 0.8,
                   ),
-                  itemCount: controller.stocks.length + (controller.hasMore.value ? 1 : 0),
+                  itemCount:
+                      controller.stocks.length +
+                      (controller.hasMore.value ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index >= controller.stocks.length) {
                       return Center(
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: CircularProgressIndicator(color: primaryColor),
+                          child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
+                          ),
                         ),
                       );
                     }
@@ -123,14 +118,11 @@ class _StockCardState extends State<StockCard> {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: Colors.grey.shade200,
-          width: 1,
-        ),
+        side: BorderSide(color: Colors.grey.shade200, width: 1),
       ),
       child: InkWell(
         onTap: () {
-          // Navigate to details page
+          Get.toNamed(RouteClass.stockMovements, arguments: {'id': stock.id});
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,13 +140,13 @@ class _StockCardState extends State<StockCard> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: primaryColor.withOpacity(0.1),
+                              color: AppColors.primaryColor.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
                               Icons.inventory,
                               size: 28,
-                              color: primaryColor,
+                              color: AppColors.primaryColor,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -166,14 +158,14 @@ class _StockCardState extends State<StockCard> {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
-                                  color: textColor,
+                                  color: AppColors.textColor,
                                 ),
                               ),
                               Text(
                                 stock.location ?? 'Localisation inconnue',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: lightTextColor,
+                                  color: AppColors.lightTextColor,
                                 ),
                               ),
                             ],
@@ -186,9 +178,10 @@ class _StockCardState extends State<StockCard> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: stock.status == 'good'
-                              ? Colors.green.shade100
-                              : Colors.red.shade100,
+                          color:
+                              stock.status == 'good'
+                                  ? Colors.green.shade100
+                                  : Colors.red.shade100,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -196,9 +189,10 @@ class _StockCardState extends State<StockCard> {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: stock.status == 'good'
-                                ? Colors.green.shade800
-                                : Colors.red.shade800,
+                            color:
+                                stock.status == 'good'
+                                    ? Colors.green.shade800
+                                    : Colors.red.shade800,
                           ),
                         ),
                       ),
@@ -223,7 +217,7 @@ class _StockCardState extends State<StockCard> {
                       ),
                       _buildStatItem(
                         'Valeur Totale',
-                        '\$${(stock.totalValue ?? 0).toStringAsFixed(2)}',
+                        '${(stock.totalValue ?? 0).toStringAsFixed(2)} MRU',
                       ),
                       _buildStatItem(
                         'Dernière Mise à Jour',
@@ -234,7 +228,7 @@ class _StockCardState extends State<StockCard> {
                 ],
               ),
             ),
-          
+
           ],
         ),
       ),
@@ -247,10 +241,7 @@ class _StockCardState extends State<StockCard> {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
-            color: lightTextColor,
-          ),
+          style: TextStyle(fontSize: 12, color: AppColors.lightTextColor),
         ),
         const SizedBox(height: 4),
         Text(
@@ -258,7 +249,7 @@ class _StockCardState extends State<StockCard> {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: textColor,
+            color: AppColors.textColor,
           ),
         ),
       ],

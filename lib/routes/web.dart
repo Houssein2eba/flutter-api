@@ -14,6 +14,7 @@ import 'package:demo/views/stock/index.dart';
 import 'package:demo/views/users/create.dart';
 import 'package:demo/views/users/edit.dart';
 import 'package:demo/views/users/index.dart';
+import 'package:demo/views/vents/index.dart';
 import 'package:get/get.dart';
 
 class RouteClass {
@@ -30,6 +31,7 @@ class RouteClass {
   static String stocks = "/stocks";
   static String roles="/roles";
   static  String crateRole= "/create-role";
+  static String stockMovements="/stock-movements";
 
 
   static String getStocksRoute() => stocks;
@@ -47,6 +49,7 @@ class RouteClass {
 
   static List<GetPage> getPages() {
     return [
+      GetPage(name: stockMovements, page: () => StockMovementsScreen()),
       GetPage(
         name: dashBoard,
         page: () => DashboardScreen(),

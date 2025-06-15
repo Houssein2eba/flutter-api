@@ -88,14 +88,18 @@ class Clientscontroller extends AbstractClientsController {
 
       if (statusRequest == StatusRequest.success) {
         clients.removeWhere((client) => client.id == id);
-        showToast("Client deleted successfully", "success");
-        update();
+        
+        
+      }
+      if(clients.isEmpty){
+        statusRequest = StatusRequest.failure;
       }
     } catch (e) {
       statusRequest = StatusRequest.serverFailure;
       showToast("Error deleting client: $e", "error");
-      update();
+      
     }
+    update();
   }
 
   @override
