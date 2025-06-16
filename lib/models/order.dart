@@ -9,7 +9,6 @@ class Order {
   final String reference;
   final String status;
   final double totalAmount;
- 
   final List<Product> products;
   final Client client;
   final int items;

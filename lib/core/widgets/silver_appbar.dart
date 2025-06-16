@@ -1,5 +1,6 @@
 import 'package:demo/core/constant/colors_class.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CustomSilverAppbar extends StatelessWidget {
   final String title;
@@ -50,7 +51,7 @@ class CustomSilverAppbar extends StatelessWidget {
         ),
         child: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Get.back(),
         ),
       ),
     );

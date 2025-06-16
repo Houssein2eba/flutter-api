@@ -26,22 +26,34 @@ class UpdateClientController extends GetxController {
   }
 
   Future<void> updateClient() async {
-    Get.dialog(
-      const Center(child: CircularProgressIndicator()),
-      barrierDismissible: false,
-    );
+    statusRequest = StatusRequest.loading;
+    update();
+
     final response = await clientsData.updateClient(
       id: client!.id,
       name: nameController.text,
       phone: phoneController.text,
     );
-    Get.back();
+
     statusRequest = handlingData(response);
     if (statusRequest == StatusRequest.success) {
-      showToast("Client updated successfully", "success");
-      Get.delete<Clientscontroller>();
-      Get.put(Clientscontroller());
-      Get.offNamed(RouteClass.home);
+  Get.dialog(AlertDialog(
+    title: Text("Success"),
+    content: Text("Client updated successfully"),
+    actions: [
+      TextButton(
+        child: Text("OK"),
+        onPressed: () {
+          Get.back(); // close dialog
+          Get.back(); // back to clients list
+          Get.find<Clientscontroller>().fetchClients();
+        },
+      ),
+    ],
+  ));
+} else {
+      showToast("Error updating client", "error");
     }
+    update();
   }
 }

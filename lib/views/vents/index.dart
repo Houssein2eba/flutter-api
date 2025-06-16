@@ -9,7 +9,7 @@ class StockMovementsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(StockMovementsController());
+    Get.find<StockMovementsController>();
     return GetBuilder<StockMovementsController>(
       builder: (controller) {
         return Scaffold(

@@ -11,19 +11,19 @@ import '../../core/functions/handle_validation.dart';
 
 class UserController extends GetxController {
   final StorageService storage = Get.find();
-  
+
   final RxList<User> users = <User>[].obs;
   final RxList<Role?> roles = <Role?>[].obs;
   final RxBool isLoading = false.obs;
   var selectedRoleId = ''.obs;
-   late  final TextEditingController nameController ;
- late  final TextEditingController emailController;
-  late TextEditingController phoneController ;
-late  final TextEditingController passwordController ;
-late  final TextEditingController confirmPasswordController ;
+  late final TextEditingController nameController;
+  late final TextEditingController emailController;
+  late TextEditingController phoneController;
+  late final TextEditingController passwordController;
+  late final TextEditingController confirmPasswordController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  
-  get formkey=> _formKey;
+
+  get formkey => _formKey;
   RxBool isPasswordVisible = false.obs;
   RxBool isConfirmPasswordVisible = false.obs;
 
@@ -44,7 +44,6 @@ late  final TextEditingController confirmPasswordController ;
 
   Future<List<Role?>?> fetchRoles() async {
     try {
-      
       final token = storage.getToken();
       if (token == null) return null;
 
@@ -60,9 +59,7 @@ late  final TextEditingController confirmPasswordController ;
         return roles;
       }
       return null;
-    } finally {
-      
-    }
+    } finally {}
   }
 
   Future<void> fetchUsers() async {
@@ -78,9 +75,8 @@ late  final TextEditingController confirmPasswordController ;
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        users.value = (data['users'] as List)
-            .map((user) => User.fromJson(user))
-            .toList();
+        users.value =
+            (data['users'] as List).map((user) => User.fromJson(user)).toList();
       }
     } finally {
       isLoading(false);
@@ -130,6 +126,7 @@ late  final TextEditingController confirmPasswordController ;
       if (response.statusCode == 200) {
         await fetchUsers();
         Get.snackbar('Success', 'User updated successfully');
+
         Get.offNamed(RouteClass.users);
       } else if (response.statusCode == 422) {
         _handleValidationErrors(response);
@@ -158,12 +155,15 @@ late  final TextEditingController confirmPasswordController ;
 
   Future<bool> createEmployee() async {
     try {
-      final token = storage.getToken();      if (token == null) {
+      final token = storage.getToken();
+      if (token == null) {
         Get.snackbar('Erreur', 'Jeton d\'authentification non trouvé');
         return false;
       }
+
+      // Show loading spinner
       Get.dialog(
-        const CircularProgressIndicator(),
+        const Center(child: CircularProgressIndicator()),
         barrierDismissible: false,
       );
 
@@ -178,37 +178,50 @@ late  final TextEditingController confirmPasswordController ;
           'role_id': selectedRoleId.value,
         }),
       );
-      Get.back(); 
 
-      if (response.statusCode == 200) { 
-               UsefulFunctions.showToast(
-          'Employé créé avec succès',
-          'success',
+      // Close the loading spinner
+      Get.back();
+
+      if (response.statusCode == 200) {
+        
+
+        // Show success dialog before navigating
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Succès'),
+            content: const Text('Employé créé avec succès.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Get.back(); // Close the dialog
+                  Get.back();
+                  fetchUsers();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
         );
-        await fetchUsers();
-        Get.offNamed(RouteClass.getUsersRoute());
 
         return true;
       } else if (response.statusCode == 422) {
         _handleValidationErrors(response);
         return false;
-      } else {     
-         Get.snackbar(
-        'Erreur',
-        'Échec de la création de l\'employé ${response.statusCode}',
+      } else {
+        Get.snackbar(
+          'Erreur',
+          'Échec de la création de l\'employé (${response.statusCode})',
         );
         return false;
       }
     } catch (e) {
-      Get.back(); // Close the loading dialog
-      Get.snackbar('Error', e.toString());
+      Get.back(); // Close any open dialog
+      Get.snackbar('Erreur', e.toString());
+      return false;
     }
-    return false;
   }
 
-goToEdit(User user){
-  Get.toNamed(RouteClass.getEditUserRoute(),arguments: {'user':user});
+  goToEdit(User user) {
+    Get.to(RouteClass.getEditUserRoute(), arguments: {'user': user});
+  }
 }
-
-}
-

@@ -18,7 +18,6 @@ abstract class AbstractClientsController extends GetxController {
   Future<void> deleteClient({required String id});
   Future<void> createClient({required String name, required String phone});
 
-
   goToEditClient({required Client client});
 }
 
@@ -45,6 +44,7 @@ class Clientscontroller extends AbstractClientsController {
       isLoading = true;
       statusRequest = StatusRequest.loading;
       update();
+      clients.clear();
 
       final response = await _clientsData.getClients(search: search);
       statusRequest = handlingData(response);
@@ -68,7 +68,6 @@ class Clientscontroller extends AbstractClientsController {
     }
   }
 
-
   @override
   Future<void> searchClient(String search) async {
     if (search.isEmpty) {
@@ -77,7 +76,8 @@ class Clientscontroller extends AbstractClientsController {
       await fetchClients(search: search);
     }
   }
-    void performSearch() {
+
+  void performSearch() {
     final query = searchController.text;
     if (query.isEmpty) {
       fetchClients();
@@ -85,6 +85,7 @@ class Clientscontroller extends AbstractClientsController {
       searchClient(query);
     }
   }
+
   @override
   Future<void> deleteClient({required String id}) async {
     try {
@@ -96,16 +97,13 @@ class Clientscontroller extends AbstractClientsController {
 
       if (statusRequest == StatusRequest.success) {
         clients.removeWhere((client) => client.id == id);
-        
-        
       }
-      if(clients.isEmpty){
+      if (clients.isEmpty) {
         statusRequest = StatusRequest.failure;
       }
     } catch (e) {
       statusRequest = StatusRequest.serverFailure;
       showToast("Error deleting client: $e", "error");
-      
     }
     update();
   }
@@ -117,6 +115,8 @@ class Clientscontroller extends AbstractClientsController {
   }) async {
     try {
       isLoading = true;
+      update();
+
       final token = _storage.getToken();
 
       if (token == null) {
@@ -124,25 +124,52 @@ class Clientscontroller extends AbstractClientsController {
         return;
       }
 
+      // Show loading spinner
+      Get.dialog(
+        const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false,
+      );
+
       final response = await http.post(
         Uri.parse('$_baseUrl/clients'),
         headers: _buildHeaders(token),
         body: jsonEncode({'name': name, 'number': phone}),
       );
 
+      // Close loading spinner
+      Get.back();
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
         clients.add(Client.fromJson(data['client']));
-        showToast("Client created successfully", "success");
-        Get.offNamed('/');
+
+        // Show success dialog before redirect
+        Get.dialog(
+          AlertDialog(
+            title: const Text("Succès"),
+            content: const Text("Client ajouté avec succès."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Get.back(); // close the dialog
+                  Get.back();
+                  fetchClients();
+                },
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        );
       } else {
         final error = jsonDecode(response.body);
-        showToast("Failed to create client: ${error['error']}", "error");
+        showToast("Échec de la création: ${error['error']}", "error");
       }
     } catch (e) {
-      showToast("Error creating client: $e", "error");
+      Get.back(); // close loading spinner if error
+      showToast("Erreur lors de la création: $e", "error");
     } finally {
       isLoading = false;
+      update();
     }
   }
 
@@ -158,8 +185,4 @@ class Clientscontroller extends AbstractClientsController {
   goToEditClient({required Client client}) {
     Get.toNamed(RouteClass.getEditClientRoute(), arguments: {'client': client});
   }
-
-  
-
-
 }

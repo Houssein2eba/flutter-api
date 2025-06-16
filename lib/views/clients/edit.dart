@@ -1,4 +1,5 @@
 import 'package:demo/controllers/client/update_client_controller.dart';
+import 'package:demo/core/class/handeling_data_view.dart';
 import 'package:demo/core/constant/colors_class.dart';
 import 'package:demo/core/widgets/silver_appbar.dart';
 import 'package:demo/wigets/special_button.dart';
@@ -11,16 +12,14 @@ class EditClientScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(UpdateClientController());
+    final controller = Get.find<UpdateClientController>();
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: CustomScrollView(
         slivers: [
           CustomSilverAppbar(title: 'Modifier Client'),
-          SliverToBoxAdapter(
-            child: _buildFormContent(controller),
-          ),
+          SliverToBoxAdapter(child: _buildFormContent(controller)),
         ],
       ),
     );
@@ -29,20 +28,27 @@ class EditClientScreen extends StatelessWidget {
   Widget _buildFormContent(UpdateClientController controller) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 32),
-            _buildNameField(controller),
-            const SizedBox(height: 20),
-            _buildPhoneField(controller),
-            const SizedBox(height: 40),
-            _buildUpdateButton(controller),
-          ],
-        ),
+      child: GetBuilder<UpdateClientController>(
+        builder: (context) {
+          return Form(
+            key: _formKey,
+            child: HandlingDataView(
+              statusRequest: controller.statusRequest,
+              widget: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildHeader(),
+                  const SizedBox(height: 32),
+                  _buildNameField(controller),
+                  const SizedBox(height: 20),
+                  _buildPhoneField(controller),
+                  const SizedBox(height: 40),
+                  _buildUpdateButton(controller),
+                ],
+              ),
+            ),
+          );
+        }
       ),
     );
   }
@@ -78,10 +84,7 @@ class EditClientScreen extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           'Mettre à jour les informations du client',
-          style: TextStyle(
-            fontSize: 14,
-            color: AppColors.lightTextColor,
-          ),
+          style: TextStyle(fontSize: 14, color: AppColors.lightTextColor),
           textAlign: TextAlign.center,
         ),
       ],
@@ -103,10 +106,15 @@ class EditClientScreen extends StatelessWidget {
             labelText: 'Nom Complet',
             labelStyle: TextStyle(color: AppColors.lightTextColor),
             border: InputBorder.none,
-            prefixIcon: Icon(Icons.person_outline, color: AppColors.lightTextColor),
+            prefixIcon: Icon(
+              Icons.person_outline,
+              color: AppColors.lightTextColor,
+            ),
           ),
           style: TextStyle(color: AppColors.textColor),
-          validator: (value) => value?.isEmpty ?? true ? 'Veuillez entrer un nom' : null,
+          validator:
+              (value) =>
+                  value?.isEmpty ?? true ? 'Veuillez entrer un nom' : null,
         ),
       ),
     );
@@ -129,14 +137,20 @@ class EditClientScreen extends StatelessWidget {
             labelText: 'Numéro de Téléphone',
             labelStyle: TextStyle(color: AppColors.lightTextColor),
             border: InputBorder.none,
-            prefixIcon: Icon(Icons.phone_outlined, color: AppColors.lightTextColor),
+            prefixIcon: Icon(
+              Icons.phone_outlined,
+              color: AppColors.lightTextColor,
+            ),
             counterText: '',
             hintText: 'ex: 21234567',
-            hintStyle: TextStyle(color: AppColors.lightTextColor.withOpacity(0.5)),
+            hintStyle: TextStyle(
+              color: AppColors.lightTextColor.withOpacity(0.5),
+            ),
           ),
           style: TextStyle(color: AppColors.textColor),
           validator: (value) {
-            if (value?.isEmpty ?? true) return 'Veuillez entrer un numéro de téléphone';
+            if (value?.isEmpty ?? true)
+              return 'Veuillez entrer un numéro de téléphone';
             if (!RegExp(r'^[2-4][0-9]{7}$').hasMatch(value!)) {
               return 'Numéro de téléphone invalide';
             }

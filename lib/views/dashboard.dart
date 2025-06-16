@@ -73,6 +73,11 @@ class DashboardScreen extends StatelessWidget {
                     onTap: () => Get.toNamed(RouteClass.getHomeRoute()),
                   ),
                   _buildDrawerItem(
+                    icon: Icons.work,
+                    title: 'Ventes',
+                    onTap: () => Get.toNamed(RouteClass.ventes),
+                  ),
+                  _buildDrawerItem(
                     icon: Icons.inventory,
                     title: 'Stocks',
                     onTap: () => Get.toNamed(RouteClass.getStocksRoute()),

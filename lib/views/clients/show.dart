@@ -387,7 +387,7 @@ class ClientDetailsPage extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '\$${product.price.toStringAsFixed(2)}',
+                              '${product.price.toStringAsFixed(2)} MRU',
                               style: TextStyle(
                                 color: AppColors.textColor,
                                 fontWeight: FontWeight.bold,
@@ -442,7 +442,7 @@ class ClientDetailsPage extends StatelessWidget {
                               ),
                             ),
                             child: const Text(
-                              'Marquer comme Payé',
+                              'Payé',
                               style: TextStyle(fontWeight: FontWeight.w600),
                             ),
                           ),
@@ -458,7 +458,7 @@ class ClientDetailsPage extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '\$${order.totalAmount.toStringAsFixed(2)}',
+                              '${order.totalAmount.toStringAsFixed(2)} MRU',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
