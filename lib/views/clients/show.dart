@@ -79,7 +79,7 @@ class ClientDetailsPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                '${controller.orderDetails.length} commandes',
+                                '${controller.orderDetails.length} ventes',
                                 style: TextStyle(
                                   color: AppColors.primaryColor,
                                   fontWeight: FontWeight.w600,
@@ -312,7 +312,7 @@ class ClientDetailsPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      order.status.toUpperCase(),
+                      order.status=='pending'?'En attente':'Payée',
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

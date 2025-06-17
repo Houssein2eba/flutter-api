@@ -10,7 +10,7 @@ class Order {
   final String status;
   final double totalAmount;
   final List<Product> products;
-  final Client client;
+  final Client? client;
   final int items;
   final String createdAt;
   final String updatedAt;
@@ -35,7 +35,7 @@ class Order {
       status: json['status'],
       totalAmount: (json['total_amount'] as num).toDouble(),
       
-      client: Client.fromJson(json['client']),
+      client: json['client'] != null ? Client.fromJson(json['client']) : null,
       products:
           (json['products'] as List)
               .map((product) => Product.fromJson(product))
