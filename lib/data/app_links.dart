@@ -7,4 +7,5 @@ class AppLinks {
   static const String sendTokenToBackend = "$baseUrl/send-token-to-backend";
   static const String ventes = "$baseUrl/orders";
   static const String movements = "$baseUrl/stocks";
+  static const String settings = "$baseUrl/settings";
 }

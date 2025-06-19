@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:demo/core/class/status_request.dart';
 import 'package:demo/core/functions/handeling_data.dart';
+import 'package:demo/core/functions/success_dialog.dart';
 import 'package:demo/data/remote/clients_data.dart';
 import 'package:demo/models/client.dart';
 import 'package:demo/routes/web.dart';
@@ -97,6 +98,7 @@ class Clientscontroller extends AbstractClientsController {
 
       if (statusRequest == StatusRequest.success) {
         clients.removeWhere((client) => client.id == id);
+        showSuccessDialog(message: 'Opération réussie!');
       }
       if (clients.isEmpty) {
         statusRequest = StatusRequest.failure;
@@ -144,23 +146,9 @@ class Clientscontroller extends AbstractClientsController {
         clients.add(Client.fromJson(data['client']));
 
         // Show success dialog before redirect
-        Get.dialog(
-          AlertDialog(
-            title: const Text("Succès"),
-            content: const Text("Client ajouté avec succès."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Get.back(); // close the dialog
-                  Get.back();
-                  fetchClients();
-                },
-                child: const Text("OK"),
-              ),
-            ],
-          ),
-        );
-      } else {
+      showSuccessDialog(message: 'Opération réussie!');
+
+        } else {
         final error = jsonDecode(response.body);
         showToast("Échec de la création: ${error['error']}", "error");
       }

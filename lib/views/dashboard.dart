@@ -102,6 +102,7 @@ class DashboardScreen extends StatelessWidget {
                       );
                     },
                   ),
+                 _buildDrawerItem(icon: Icons.settings, title: 'Paramètres', onTap: () => Get.toNamed(RouteClass.settings)),
                 ],
               ),
             ),

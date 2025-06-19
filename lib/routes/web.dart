@@ -5,6 +5,7 @@ import 'package:demo/controllers/dasboard/dashboard_controller.dart';
 import 'package:demo/controllers/notification_controller.dart';
 import 'package:demo/controllers/order/single_order_controller.dart';
 import 'package:demo/controllers/order/ventes_controller.dart';
+import 'package:demo/controllers/setting/setting_controller.dart';
 import 'package:demo/controllers/user/user_controller.dart';
 import 'package:demo/controllers/ventes/ventes_controller.dart';
 import 'package:demo/core/middleware/auth_middleware.dart';
@@ -19,6 +20,7 @@ import 'package:demo/views/homepage.dart';
 import 'package:demo/views/notifications/index.dart';
 import 'package:demo/views/role/create.dart';
 import 'package:demo/views/role/index.dart';
+import 'package:demo/views/setting/index.dart';
 import 'package:demo/views/stock/index.dart';
 import 'package:demo/views/users/create.dart';
 import 'package:demo/views/users/edit.dart';
@@ -28,6 +30,7 @@ import 'package:demo/views/vents/list/vents_screen.dart';
 import 'package:get/get.dart';
 
 class RouteClass {
+  static String settings = "/settings";
   static String home = "/";
   static String login = "/login";
   static String createClient = "/create-client";
@@ -167,6 +170,15 @@ class RouteClass {
         middlewares: [SanctumAuthMiddleware()],
         binding: BindingsBuilder(() {
           Get.lazyPut(() => VentesController());
+        }),
+      ),
+      //Settings
+      GetPage(
+        name: settings,
+        page: () => SettingsScreen(),
+        middlewares: [SanctumAuthMiddleware()],
+        binding: BindingsBuilder(() {
+          Get.lazyPut(() => SettingController());
         }),
       ),
     ];
