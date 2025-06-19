@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:demo/core/class/status_request.dart';
 import 'package:demo/core/functions/handeling_data.dart';
-import 'package:demo/data/remote/vente_data.dart';
+import 'package:demo/data/remote/paginated_vantes_data.dart';
 import 'package:demo/models/order.dart';
 import 'package:demo/services/stored_service.dart';
 import 'package:flutter/material.dart';
@@ -13,43 +13,64 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class VentesController extends GetxController {
-  List<Order> orders = [];
+class PaginatedVentesController extends GetxController {
   StatusRequest statusRequest = StatusRequest.none;
-  VenteData venteData = VenteData(Get.find());
+  RxList<Order> orders = <Order>[].obs;
+  int currentPage = 1;
+  int lastPage = 1;
+  bool isLoadingMore = false;
+  bool hasMore = true;
   StorageService storage = Get.find();
+
+  PaginatedVentesData paginatedVentesData = PaginatedVentesData(Get.find());
 
   @override
   void onInit() {
-    print("onInit ${storage.getToken()}");
-    getOrders();
     super.onInit();
+    getInitialVentes();
   }
 
-  Future<void> getOrders() async {
+  getInitialVentes() async {
     statusRequest = StatusRequest.loading;
     update();
-    try {
-      var response = await venteData.getVentes();
-      print(response);
-      statusRequest = handlingData(response);
-
-      if (statusRequest == StatusRequest.success) {
-        if (response['orders'] != null) {
-          for (var order in response['orders']) {
-            orders.add(Order.fromJson(order));
-          }
-        } else {
-          statusRequest = StatusRequest.failure;
-        }
+    currentPage = 1;
+    final response = await paginatedVentesData.getPaginatedVentes(page: currentPage);
+    statusRequest = handlingData(response);
+    
+    if (statusRequest == StatusRequest.success) {
+      if (response['orders'] != null) {
+        orders.value = List<Order>.from(response['orders'].map((x) => Order.fromJson(x)));
+        currentPage = response['meta']['current_page'] ?? 1;
+        lastPage = response['meta']['last_page'] ?? 1;
+        hasMore = currentPage < lastPage;
       }
-    } catch (e) {
-      statusRequest = StatusRequest.failure;
-      update();
     }
     update();
   }
 
+  loadMoreVentes() async {
+    if (isLoadingMore || !hasMore) return;
+    
+    isLoadingMore = true;
+    update();
+    
+    final nextPage = currentPage + 1;
+    final response = await paginatedVentesData.getPaginatedVentes(page: nextPage);
+    
+    if (handlingData(response) == StatusRequest.success) {
+      if (response['orders'] != null) {
+        orders.addAll(List<Order>.from(response['orders'].map((x) => Order.fromJson(x))));
+        currentPage = response['meta']['current_page'] ?? nextPage;
+        lastPage = response['meta']['last_page'] ?? lastPage;
+        hasMore = currentPage < lastPage;
+      }
+    }
+    
+    isLoadingMore = false;
+    update();
+  }
+
+  
   Future<void> markAsPaid({required String id}) async {
     statusRequest = StatusRequest.loading;
     update();
@@ -160,6 +181,5 @@ class VentesController extends GetxController {
       debugPrint("PDF Export Error: $e");
     }
   }
-
 
 }

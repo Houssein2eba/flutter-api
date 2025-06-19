@@ -7,6 +7,7 @@ import 'package:demo/controllers/order/single_order_controller.dart';
 import 'package:demo/controllers/order/ventes_controller.dart';
 import 'package:demo/controllers/setting/setting_controller.dart';
 import 'package:demo/controllers/user/user_controller.dart';
+import 'package:demo/controllers/ventes/paginated_vantes_controller.dart';
 import 'package:demo/controllers/ventes/ventes_controller.dart';
 import 'package:demo/core/middleware/auth_middleware.dart';
 import 'package:demo/services/auth_binding.dart';
@@ -26,6 +27,7 @@ import 'package:demo/views/users/create.dart';
 import 'package:demo/views/users/edit.dart';
 import 'package:demo/views/users/index.dart';
 import 'package:demo/views/vents/index.dart';
+import 'package:demo/views/vents/list/paginated_vantes.dart';
 import 'package:demo/views/vents/list/vents_screen.dart';
 import 'package:get/get.dart';
 
@@ -166,10 +168,10 @@ class RouteClass {
       //Ventes
       GetPage(
         name: ventes,
-        page: () => VentsScreen(),
+        page: () => PaginatedVentsScreen(),
         middlewares: [SanctumAuthMiddleware()],
         binding: BindingsBuilder(() {
-          Get.lazyPut(() => VentesController());
+          Get.lazyPut(() => PaginatedVentesController());
         }),
       ),
       //Settings

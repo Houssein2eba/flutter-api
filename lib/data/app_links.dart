@@ -8,4 +8,5 @@ class AppLinks {
   static const String ventes = "$baseUrl/orders";
   static const String movements = "$baseUrl/stocks";
   static const String settings = "$baseUrl/settings";
+  static const String paginatedVentes= "$baseUrl/orders";
 }

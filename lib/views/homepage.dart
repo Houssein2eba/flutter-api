@@ -56,12 +56,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-
-
-
-
-
-
   Widget _buildClientList(Clientscontroller controller) {
     return Container(
       margin: const EdgeInsets.only(top: 24),
