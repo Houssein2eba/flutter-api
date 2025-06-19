@@ -63,11 +63,9 @@ class _PaginatedVentsScreenState extends State<PaginatedVentsScreen> {
                     _buildHeaderSection(),
                     const SizedBox(height: 20),
                     _buildOrdersList(),
-                    if (controller.isLoadingMore) 
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        child: LoadinIndicator(),
-                      ),
+                    controller.isLoadingMore.value?
+                      Center(child: CircularProgressIndicator()): const SizedBox(),
+                    
                   ],
                 ),
               );

@@ -5,13 +5,17 @@ import 'package:demo/models/stock_movement.dart';
 import 'package:get/get.dart';
 
 class StockMovementsController extends GetxController {
-  List<StockMovement> movements = []; // Store filtered movements
+  List<StockMovement> movements = [];
   StatusRequest statusRequest = StatusRequest.none;
 
   String? typeFilter;
   String sortField = 'stockDate';
   String sortDirection = 'desc';
   String? id;
+  int currentPage = 1;
+  int lastPage = 1;
+  RxBool isLoadingMore = false.obs;
+  bool hasMore = true;
   MovementData movementData = MovementData(Get.find());
 
   @override
@@ -21,31 +25,62 @@ class StockMovementsController extends GetxController {
     fetchMovements();
   }
 
-  Future<void> fetchMovements() async {
-    statusRequest = StatusRequest.loading;
-    update();
-    
+  Future<void> fetchMovements({bool reset = true}) async {
+    if (reset) {
+      statusRequest = StatusRequest.loading;
+      currentPage = 1;
+      movements.clear();
+      update();
+    }
+
     var response = await movementData.getMovementsData(
       id: id!,
       type: typeFilter,
+      page: currentPage,
     );
-    
+
     statusRequest = handlingData(response);
-    
+
     if (StatusRequest.success == statusRequest) {
       if (response['movements'] != null) {
-        movements = List<StockMovement>.from(
+        final newMovements = List<StockMovement>.from(
           response['movements'].map((x) => StockMovement.fromJson(x)),
         );
-        applySorting(); 
-        if(movements.isEmpty){
-          statusRequest=StatusRequest.failure;
+        
+        if (reset) {
+          movements = newMovements;
+        } else {
+          movements.addAll(newMovements);
+        }
+        
+        applySorting();
+        currentPage = response['meta']['current_page'] ?? currentPage;
+        lastPage = response['meta']['last_page'] ?? lastPage;
+        hasMore = currentPage < lastPage;
+        
+        if (movements.isEmpty) {
+          statusRequest = StatusRequest.failure;
         }
       } else {
         statusRequest = StatusRequest.failure;
       }
     }
     update();
+  }
+
+  Future<void> loadMoreMovements() async {
+    if (isLoadingMore.value || !hasMore) return;
+    
+    isLoadingMore.value = true;
+    update(); // Notify listeners about loading state change
+    
+    try {
+      currentPage++;
+      await fetchMovements(reset: false);
+    } finally {
+      isLoadingMore.value = false;
+      update(); // Notify listeners that loading is complete
+    }
   }
 
   void applySorting() {
@@ -58,15 +93,16 @@ class StockMovementsController extends GetxController {
       }
       return sortDirection == 'asc' ? compare : -compare;
     });
+    update(); // Notify UI to rebuild after sorting
   }
 
   void setTypeFilter(String? type) {
     typeFilter = type;
-    fetchMovements(); // Fetch fresh data with the new filter
+    fetchMovements(); // Reset pagination when filter changes
   }
 
   void clearFilters() {
     typeFilter = null;
-    fetchMovements(); // Fetch fresh data without filters
+    fetchMovements(); // Reset pagination when clearing filters
   }
 }

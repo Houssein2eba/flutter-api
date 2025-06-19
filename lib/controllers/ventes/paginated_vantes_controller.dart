@@ -18,7 +18,7 @@ class PaginatedVentesController extends GetxController {
   RxList<Order> orders = <Order>[].obs;
   int currentPage = 1;
   int lastPage = 1;
-  bool isLoadingMore = false;
+  RxBool isLoadingMore = false.obs;
   bool hasMore = true;
   StorageService storage = Get.find();
 
@@ -49,10 +49,10 @@ class PaginatedVentesController extends GetxController {
   }
 
   loadMoreVentes() async {
-    if (isLoadingMore || !hasMore) return;
+    if (isLoadingMore.value || !hasMore) return;
     
-    isLoadingMore = true;
-    update();
+    isLoadingMore.value = true;
+    
     
     final nextPage = currentPage + 1;
     final response = await paginatedVentesData.getPaginatedVentes(page: nextPage);
@@ -66,8 +66,8 @@ class PaginatedVentesController extends GetxController {
       }
     }
     
-    isLoadingMore = false;
-    update();
+    isLoadingMore.value = false;
+    
   }
 
   

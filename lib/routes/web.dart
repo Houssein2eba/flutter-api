@@ -4,7 +4,7 @@ import 'package:demo/controllers/client/update_client_controller.dart';
 import 'package:demo/controllers/dasboard/dashboard_controller.dart';
 import 'package:demo/controllers/notification_controller.dart';
 import 'package:demo/controllers/order/single_order_controller.dart';
-import 'package:demo/controllers/order/ventes_controller.dart';
+import 'package:demo/controllers/order/mouvement_controller.dart';
 import 'package:demo/controllers/setting/setting_controller.dart';
 import 'package:demo/controllers/user/user_controller.dart';
 import 'package:demo/controllers/ventes/paginated_vantes_controller.dart';

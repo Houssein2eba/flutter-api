@@ -8,12 +8,17 @@ class MovementData {
   MovementData(this.crud);
   StorageService storage = Get.find();
 
-  getMovementsData({required String id, String? type}) async {
+  getMovementsData({
+    required String id, 
+    String? type,
+    int page = 1
+  }) async {
     String? token = storage.getToken();
-
-    String url = "${AppLinks.movements}/$id";
+    
+    // Build URL with proper query parameters
+    String url = "${AppLinks.movements}/$id?page=$page";
     if (type != null) {
-      url += "?type=$type";
+      url += "&type=$type"; 
     }
 
     var response = await crud.getData(url, {

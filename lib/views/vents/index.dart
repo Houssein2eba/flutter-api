@@ -1,15 +1,44 @@
-import 'package:demo/controllers/order/ventes_controller.dart';
+import 'package:demo/controllers/order/mouvement_controller.dart';
 import 'package:demo/core/class/handeling_data_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class StockMovementsScreen extends StatelessWidget {
+class StockMovementsScreen extends StatefulWidget {
   const StockMovementsScreen({super.key});
 
   @override
+  State<StockMovementsScreen> createState() => _StockMovementsScreenState();
+}
+
+class _StockMovementsScreenState extends State<StockMovementsScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final controller = Get.find<StockMovementsController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels == 
+        _scrollController.position.maxScrollExtent) {
+      if (!controller.isLoadingMore.value) {
+        controller.loadMoreMovements();
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Get.find<StockMovementsController>();
     return GetBuilder<StockMovementsController>(
       builder: (controller) {
         return Scaffold(
@@ -143,94 +172,121 @@ class StockMovementsScreen extends StatelessWidget {
               Expanded(
                 child: HandlingDataView(
                   statusRequest: controller.statusRequest,
-                  widget: ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: controller.movements.length,
-                    separatorBuilder: (context, index) => SizedBox(height: 8),
-                    itemBuilder: (context, index) {
-                      final movement = controller.movements[index];
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              blurRadius: 6,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          leading: Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: movement.type == 'in'
-                                  ? Colors.green.shade50
-                                  : Colors.red.shade50,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              movement.type == 'in'
-                                  ? Icons.arrow_downward
-                                  : Icons.arrow_upward,
-                              color: movement.type == 'in'
-                                  ? Colors.green
-                                  : Colors.red,
-                            ),
-                          ),
-                          title: Text(
-                            movement.productName,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 4),
-                              Text(
-                                'Quantity: ${movement.quantity}',
-                                style: TextStyle(color: Colors.grey.shade600),
+                  widget: Column(
+                    children: [
+                      Expanded(
+                        child: ListView.separated(
+                          controller: _scrollController,
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: controller.movements.length + 
+                              (controller.isLoadingMore.value ? 1 : 0),
+                          separatorBuilder: (context, index) => SizedBox(height: 8),
+                          itemBuilder: (context, index) {
+                            if (index >= controller.movements.length) {
+                              // Show loading indicator at the bottom
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+                            
+                            final movement = controller.movements[index];
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    blurRadius: 6,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 2),
-                              Text(
-                                DateFormat('MMM dd, yyyy - hh:mm a')
-                                    .format(movement.stockDate),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade500,
+                              child: ListTile(
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                leading: Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: movement.type == 'in'
+                                        ? Colors.green.shade50
+                                        : Colors.red.shade50,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    movement.type == 'in'
+                                        ? Icons.arrow_downward
+                                        : Icons.arrow_upward,
+                                    color: movement.type == 'in'
+                                        ? Colors.green
+                                        : Colors.red,
+                                  ),
+                                ),
+                                title: Text(
+                                  movement.productName,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 4),
+                                    Text(
+                                      'Quantity: ${movement.quantity}',
+                                      style: TextStyle(color: Colors.grey.shade600),
+                                    ),
+                                    SizedBox(height: 2),
+                                    Text(
+                                      DateFormat('MMM dd, yyyy - hh:mm a')
+                                          .format(movement.stockDate),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey.shade500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                trailing: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: movement.type == 'in'
+                                        ? Colors.green.shade50
+                                        : Colors.red.shade50,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Text(
+                                    movement.type == 'in' ? 'Entrée' : 'Sortie',
+                                    style: TextStyle(
+                                      color: movement.type == 'in'
+                                          ? Colors.green
+                                          : Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ],
-                          ),
-                          trailing: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: movement.type == 'in'
-                                  ? Colors.green.shade50
-                                  : Colors.red.shade50,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Text(
-                              movement.type == 'in' ? 'Entrée' : 'Sortie',
-                              style: TextStyle(
-                                color: movement.type == 'in'
-                                    ? Colors.green
-                                    : Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                      // Additional loading indicator at the very bottom
+                      Obx(() => controller.isLoadingMore.value
+                          ? Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          : SizedBox.shrink()),
+                    ],
                   ),
                 ),
               ),
