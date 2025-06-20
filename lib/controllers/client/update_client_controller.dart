@@ -1,6 +1,7 @@
 import 'package:demo/controllers/client/client_controller.dart';
 import 'package:demo/core/class/status_request.dart';
 import 'package:demo/core/functions/handeling_data.dart';
+import 'package:demo/core/functions/success_dialog.dart';
 import 'package:demo/data/remote/clients_data.dart';
 import 'package:demo/models/client.dart';
 import 'package:demo/routes/web.dart';
@@ -37,20 +38,12 @@ class UpdateClientController extends GetxController {
 
     statusRequest = handlingData(response);
     if (statusRequest == StatusRequest.success) {
-  Get.dialog(AlertDialog(
-    title: Text("Success"),
-    content: Text("Client updated successfully"),
-    actions: [
-      TextButton(
-        child: Text("OK"),
-        onPressed: () {
-          Get.back(); // close dialog
-          Get.back(); // back to clients list
-          Get.find<Clientscontroller>().fetchClients();
-        },
-      ),
-    ],
-  ));
+           
+      showSuccessDialog(message: 'Opération réussie!', onSuccess: () {
+      Get.until((route) => route.settings.name == RouteClass.home);
+        Get.find<Clientscontroller>().fetchClients();
+      });
+      
 } else {
       showToast("Error updating client", "error");
     }

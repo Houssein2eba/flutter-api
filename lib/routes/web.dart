@@ -28,7 +28,6 @@ import 'package:demo/views/users/edit.dart';
 import 'package:demo/views/users/index.dart';
 import 'package:demo/views/vents/index.dart';
 import 'package:demo/views/vents/list/paginated_vantes.dart';
-import 'package:demo/views/vents/list/vents_screen.dart';
 import 'package:get/get.dart';
 
 class RouteClass {

@@ -40,7 +40,7 @@ class Crud {
       if (await checkConnection()) {
         var response = await http.get(Uri.parse(url), headers: header);
         print(response.statusCode);
-        print(response.body);
+        // print(response.body);
         if (response.statusCode == 200 || response.statusCode == 201) {
           Map reponseBody = json.decode(response.body);
           return Right(reponseBody);

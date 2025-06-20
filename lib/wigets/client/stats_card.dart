@@ -52,7 +52,7 @@ class StatsCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        '${controller.clients.length}',
+                        '${controller.usersCount}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 28,

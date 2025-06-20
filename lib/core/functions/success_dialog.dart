@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void showSuccessDialog({required String message}) {
+void showSuccessDialog({required String message, VoidCallback? onSuccess}) {
   Get.defaultDialog(
-    title: 'Succès', // "Success" in French
-    middleText: 'Opération réussie!', // "Operation successful!" in French
+    title: 'Succès', 
+    middleText: 'Opération réussie!',
     titleStyle: TextStyle(
       fontWeight: FontWeight.bold,
       color: Colors.green,
@@ -47,7 +47,15 @@ void showSuccessDialog({required String message}) {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      onPressed: () => Get.back(),
+      onPressed: () {
+        if (onSuccess != null) {
+        // Get.back();
+          onSuccess();
+        }else{
+        Get.back();
+
+        }
+      },
       child: Text(
         'OK',
         style: TextStyle(color: Colors.white),

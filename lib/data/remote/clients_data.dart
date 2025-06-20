@@ -8,11 +8,11 @@ class ClientsData {
   ClientsData(this.crud);
   StorageService storage = Get.find();
 
-  getClients({String? search}) async {
+  getClients({String? search,int page = 1}) async {
     String? token = storage.getToken();
-    String url = AppLinks.clients;
+    String url = "${AppLinks.clients}?page=$page";
     if (search != null) {
-      url = "${AppLinks.clients}?search=$search";
+      url = "${AppLinks.clients}?search=$search&page=$page";
     }
     var response = await crud.getData(url, {
       "Authorization": "Bearer $token",

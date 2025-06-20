@@ -52,41 +52,40 @@ class CreateRoleController extends GetxController {
     update();
   }
 
-  Future<void> createRole() async {
-    try {
-      statusRequest = StatusRequest.loading;
-      update();
+Future<void> createRole() async {
+  try {
+    statusRequest = StatusRequest.loading;
+    update();
 
-      var response = await rolesData.createRole(
-        role: roleNameController.text.trim(),
-        perissions: selectedPermissions,
-      );
-      statusRequest = handlingData(response);
+    var response = await rolesData.createRole(
+      role: roleNameController.text.trim(),
+      perissions: selectedPermissions,
+    );
+    statusRequest = handlingData(response);
 
-      if (statusRequest == StatusRequest.success) {
-        Get.snackbar(
-          'Succès',
-          'Role est crée avec succès',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-        Get.delete<RolesController>();
-        Get.put(RolesController());
-        Get.offNamed(RouteClass.roles);
-      } else {
-        handleValidationErrors(response);
-      }
-    } catch (e) {
-      
-      statusRequest = StatusRequest.serverException;
+    if (statusRequest == StatusRequest.success) {
       Get.snackbar(
-        'Erreur',
-        'Une erreur s\'est produite lors de la création du rôle',
+        'Succès',
+        'Role est crée avec succès',
         snackPosition: SnackPosition.BOTTOM,
       );
+      // Just call fetchRoles() on the existing controller
+      Get.find<RolesController>().fetchRoles();
+      // Use offNamed to replace current route
+      Get.until((route) => route.settings.name == RouteClass.roles);
+    } else {
+      handleValidationErrors(response);
     }
-    update();
+  } catch (e) {
+    statusRequest = StatusRequest.serverException;
+    Get.snackbar(
+      'Erreur',
+      'Une erreur s\'est produite lors de la création du rôle',
+      snackPosition: SnackPosition.BOTTOM,
+    );
   }
-
+  update();
+}
   @override
   void onClose() {
     roleNameController.dispose();

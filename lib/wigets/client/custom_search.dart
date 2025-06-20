@@ -66,7 +66,7 @@ class CustomClientSearch extends GetView<Clientscontroller> {
               : null,
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         ),
-        onSubmitted: (query) => controller.performSearch(),
+        onSubmitted: (query) => controller.submitSearch(),
         onChanged: (value) => controller.update(),
       ),
     );
