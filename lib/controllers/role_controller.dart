@@ -25,7 +25,7 @@ class RoleController extends GetxController {
         return;
       }
       final response = await http.get(
-        Uri.parse('http://192.168.100.13:8000/api/roles'),
+        Uri.parse('http://192.168.43.180:8000/api/roles'),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',

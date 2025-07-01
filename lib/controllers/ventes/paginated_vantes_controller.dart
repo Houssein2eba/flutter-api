@@ -78,7 +78,7 @@ class PaginatedVentesController extends GetxController {
     final token = storage.getToken();
 
     final response = await http.put(
-      Uri.parse('http://192.168.100.13:8000/api/clients/orders/mark-paid/$id'),
+      Uri.parse('http://192.168.43.180:8000/api/clients/orders/mark-paid/$id'),
       headers: {
         'Authorization': 'Bearer $token',
         'Accept': 'application/json',
@@ -124,7 +124,7 @@ class PaginatedVentesController extends GetxController {
 
       // API URL
       final url =
-          'http://192.168.100.13:8000/api/clients/orders/export-pdf/$id';
+          'http://192.168.43.180:8000/api/clients/orders/export-pdf/$id';
 
       // Make the request
       final response = await http.get(

@@ -8,7 +8,7 @@ import 'dart:convert';
 
 
 class NotificationController extends GetxController {
-  static const String _baseUrl = 'http://192.168.100.13:8000/api';
+  static const String _baseUrl = 'http://192.168.43.180:8000/api';
   final storage = Get.find<StorageService>();
   
   final notifications = <Notificatione>[].obs;

@@ -31,8 +31,8 @@ class StocksController extends GetxController {
       final token = storage.getToken();
       final url =
           loadMore && nextCursor.value.isNotEmpty
-              ? 'http://192.168.100.13:8000/api/stocks?cursor=${nextCursor.value}'
-              : 'http://192.168.100.13:8000/api/stocks';
+              ? 'http://192.168.43.180:8000/api/stocks?cursor=${nextCursor.value}'
+              : 'http://192.168.43.180:8000/api/stocks';
 
       final response = await http.get(
         Uri.parse(url),

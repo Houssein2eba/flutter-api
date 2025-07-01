@@ -49,7 +49,7 @@ class EditUserController extends GetxController {
     final token = storage.getToken();
     if (token == null) return;
     final response = await http.put(
-      Uri.parse('http://192.168.100.13:8000/api/users/$id'),
+      Uri.parse('http://192.168.43.180:8000/api/users/$id'),
       headers: _buildHeaders(token),
       body: json.encode({
         'name': nameController.text,

@@ -19,7 +19,7 @@ class Authcontroller extends GetxController {
     
     isLoading.value = true;
     final response = await http.post(
-      Uri.parse('http://192.168.100.13:8000/api/login'),
+      Uri.parse('http://192.168.43.180:8000/api/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -58,7 +58,7 @@ class Authcontroller extends GetxController {
     final token = storage.getToken();
 
     final response = await http.post(
-      Uri.parse('http://192.168.100.13:8000/api/logout'),
+      Uri.parse('http://192.168.43.180:8000/api/logout'),
       headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
     );
 

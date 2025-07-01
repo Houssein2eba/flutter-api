@@ -48,7 +48,7 @@ class UserController extends GetxController {
       if (token == null) return null;
 
       final response = await http.get(
-        Uri.parse('http://192.168.100.13:8000/api/roles'),
+        Uri.parse('http://192.168.43.180:8000/api/roles'),
         headers: _buildHeaders(token),
       );
 
@@ -69,7 +69,7 @@ class UserController extends GetxController {
       if (token == null) return;
 
       final response = await http.get(
-        Uri.parse('http://192.168.100.13:8000/api/users'),
+        Uri.parse('http://192.168.43.180:8000/api/users'),
         headers: _buildHeaders(token),
       );
 
@@ -87,7 +87,7 @@ class UserController extends GetxController {
     try {
       isLoading(true);
       final response = await http.delete(
-        Uri.parse('http://192.168.100.13:8000/api/users/$id'),
+        Uri.parse('http://192.168.43.180:8000/api/users/$id'),
         headers: _buildHeaders(storage.getToken()!),
       );
 
@@ -113,7 +113,7 @@ class UserController extends GetxController {
       if (token == null) return;
 
       final response = await http.put(
-        Uri.parse('http://192.168.100.13:8000/api/users/$id'),
+        Uri.parse('http://192.168.43.180:8000/api/users/$id'),
         headers: _buildHeaders(token),
         body: jsonEncode({
           'name': name,
@@ -168,7 +168,7 @@ class UserController extends GetxController {
       );
 
       final response = await http.post(
-        Uri.parse('http://192.168.100.13:8000/api/users'),
+        Uri.parse('http://192.168.43.180:8000/api/users'),
         headers: _buildHeaders(token),
         body: jsonEncode({
           'name': nameController.text,

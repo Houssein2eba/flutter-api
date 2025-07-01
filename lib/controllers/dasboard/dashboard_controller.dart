@@ -26,7 +26,7 @@ class DashboardController extends GetxController {
       final token = storage.getToken();
       
       final response = await http.get(
-        Uri.parse('http://192.168.100.13:8000/api/dashboard'),
+        Uri.parse('http://192.168.43.180:8000/api/dashboard'),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',

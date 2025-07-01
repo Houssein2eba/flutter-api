@@ -1,5 +1,10 @@
-import 'dart:async';
 import 'dart:convert';
+
+
+import 'package:demo/wigets/tost.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:demo/core/class/status_request.dart';
 import 'package:demo/core/functions/handeling_data.dart';
@@ -8,11 +13,7 @@ import 'package:demo/data/remote/clients_data.dart';
 import 'package:demo/models/client.dart';
 import 'package:demo/routes/web.dart';
 import 'package:demo/services/stored_service.dart';
-import 'package:demo/wigets/tost.dart';
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
 abstract class AbstractClientsController extends GetxController {
   Future<void> fetchClients({String? search, bool resetPagination = false});
@@ -35,10 +36,9 @@ class Clientscontroller extends AbstractClientsController {
   RxBool isLoadingMore = false.obs;
   int usersCount = 0;
   final TextEditingController searchController = TextEditingController();
-  Timer? _searchDebounce;
   String _currentSearchQuery = '';
 
-  final String _baseUrl = 'http://192.168.100.13:8000/api';
+  static const String _baseUrl = 'http://192.168.43.180:8000/api';
 
   @override
   void onInit() {
@@ -48,7 +48,6 @@ class Clientscontroller extends AbstractClientsController {
 
   @override
   void onClose() {
-    _searchDebounce?.cancel();
     searchController.dispose();
     super.onClose();
   }
@@ -110,26 +109,24 @@ class Clientscontroller extends AbstractClientsController {
     await fetchClients(search: _currentSearchQuery);
   }
 
-  
-@override
-Future<void> searchClient(String search) async {
-  // Close keyboard when search is submitted
-  FocusManager.instance.primaryFocus?.unfocus();
-  
-  _currentSearchQuery = search;
-  await fetchClients(search: search, resetPagination: true);
-}
-
-void submitSearch() {
-  final query = searchController.text.trim();
-  if (query.isNotEmpty) {
-    searchClient(query);
-  } else {
-    fetchClients(resetPagination: true); // Reset to show all clients
+  @override
+  Future<void> searchClient(String search) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    _currentSearchQuery = search;
+    await fetchClients(search: search, resetPagination: true);
   }
-}
 
+  void submitSearch() {
+    final query = searchController.text.trim();
+    query.isEmpty 
+      ? fetchClients(resetPagination: true)
+      : searchClient(query);
+  }
 
+  void clearSearch() {
+    searchController.clear();
+    fetchClients(resetPagination: true);
+  }
 
   @override
   Future<void> deleteClient({required String id}) async {
@@ -186,13 +183,11 @@ void submitSearch() {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        clients.insert(0, Client.fromJson(data['client'])); // Add new client at top
+        clients.insert(0, Client.fromJson(data['client']));
         
         showSuccessDialog(
           message: 'Opération réussie!',
-          onSuccess: () {
-            Get.until((route) => route.settings.name == RouteClass.home);
-          },
+          onSuccess: () => Get.until((route) => route.settings.name == RouteClass.home),
         );
       } else {
         final error = jsonDecode(response.body);
@@ -207,13 +202,11 @@ void submitSearch() {
     }
   }
 
-  Map<String, String> _buildHeaders(String token) {
-    return {
-      'Authorization': 'Bearer $token',
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
-  }
+  Map<String, String> _buildHeaders(String token) => {
+    'Authorization': 'Bearer $token',
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  };
 
   @override
   void goToEditClient({required Client client}) {
@@ -221,9 +214,7 @@ void submitSearch() {
       RouteClass.getEditClientRoute(),
       arguments: {'client': client},
     )?.then((result) {
-      if (result == true) {
-        fetchClients(resetPagination: true);
-      }
+      if (result == true) fetchClients(resetPagination: true);
     });
   }
 }

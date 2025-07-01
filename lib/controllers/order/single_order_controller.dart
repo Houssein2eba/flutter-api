@@ -64,8 +64,8 @@ class SingleOrderController extends GetxController{
       final token = storage.getToken();
       if (token == null) return;
       final url = loadMore && nextCursor.value.isNotEmpty
-          ? 'http://192.168.100.13:8000/api/clients/orders/$id?cursor=${nextCursor.value}'
-          : 'http://192.168.100.13:8000/api/clients/orders/$id';
+          ? 'http://192.168.43.180:8000/api/clients/orders/$id?cursor=${nextCursor.value}'
+          : 'http://192.168.43.180:8000/api/clients/orders/$id';
 
       final response = await http.get(
         Uri.parse(url),
@@ -122,7 +122,7 @@ class SingleOrderController extends GetxController{
     );
 
     // API URL
-    final url = 'http://192.168.100.13:8000/api/clients/orders/export-pdf/$id';
+    final url = 'http://192.168.43.180:8000/api/clients/orders/export-pdf/$id';
 
     // Make the request
     final response = await http.get(
@@ -191,7 +191,7 @@ class SingleOrderController extends GetxController{
   
 
     final response = await http.put(
-      Uri.parse('http://192.168.100.13:8000/api/clients/orders/mark-paid/$id'),
+      Uri.parse('http://192.168.43.180:8000/api/clients/orders/mark-paid/$id'),
       headers: {
         'Authorization': 'Bearer $token',
         'Accept': 'application/json',
